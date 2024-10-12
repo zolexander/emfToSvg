@@ -12,7 +12,10 @@ export interface EMFConvertResult {
     width?: number;
 }
 export class EMFConverter {
-    constructor() {}
+    logger: (message:string,level?: string) => void;
+    constructor(logger:(message:string) => void) {
+        this.logger = logger;
+    }
     private async _readFileToBlob(filePath: string): Promise<ArrayBuffer> {
 
         const fileBuffer = await fs.promises.readFile(filePath);
@@ -44,8 +47,8 @@ export class EMFConverter {
         try {
             var size = this._getSize(reader);
             let records = new EMFRecords(reader,size);
-            Helper.log(`[EMFHEADER] displayDevXyUM: ${records._header.displayDevCxUm/1000}displayDevCyUm: ${records._header.displayDevCyUm/1000}`)
-            Helper.log(`[ConvertEMF] ${records._header.toString()}`);
+            this.logger(`[EMFHEADER] displayDevXyUM: ${records._header.displayDevCxUm/1000}displayDevCyUm: ${records._header.displayDevCyUm/1000}`)
+            this.logger(`[ConvertEMF] ${records._header.toString()}`);
             var result: EMFConvertResult;
             if(settings && !settings.hasOwnProperty('width') && settings.hasOwnProperty('outFile')) {
                 let outPath = settings.outFile;
@@ -82,7 +85,7 @@ export class EMFConverter {
             return result;
         } catch(e) {
             if (e instanceof EMFJSError) {
-                Helper.log(e.message);
+                this.logger(e.message);
             }
 
             result = {

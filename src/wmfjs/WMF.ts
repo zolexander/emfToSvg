@@ -4,14 +4,17 @@ import { Renderer } from './Renderer';
 import { WMFRecords } from './WMFRecords';
 import { WMFJSError } from './Helper';
 import { Helper } from './Helper';
-import { extractGzip, logMessage } from '../emfutils';
+import { extractGzip } from '../emfutils';
 export interface WMFConvertResult {
     svg: string;
     returnValue: number;
 }
 
 export class WMFConverter {
-    constructor() {}
+    logger: (message:string,level?:string) => void;
+    constructor(logger : (message:string,level?:string)=> void) {
+        this.logger = logger
+    }
     private async _readFileToBlob(filePath: string): Promise<ArrayBuffer> {
 
         const fileBuffer = await fs.promises.readFile(filePath);
@@ -34,7 +37,7 @@ export class WMFConverter {
         let placable = renderer._img?._placable.boundingBox
         let settings = placable?.getSettings();
         if(settings){
-            logMessage('settings exists');
+            this.logger('settings exists');
             var res = renderer.render(settings);
             let result = {
                 svg: res,
@@ -57,7 +60,7 @@ export class WMFConverter {
         }
         } catch (e) {
             if (e instanceof WMFJSError) {
-                console.error(e.message);
+                this.logger(e.message);
             }
             let res = {
                 svg: '',
