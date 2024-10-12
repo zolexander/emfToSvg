@@ -1,3 +1,3 @@
-import { Num } from './Num'
+import { EMFConverter,EMFConvertResult } from './emfjs/EMF'
 
-export { Num }
+export { EMFConvertResult,EMFConverter }

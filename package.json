@@ -52,10 +52,19 @@
   },
   "dependencies": {
     "@types/pretty": "^2.0.3",
+    "assert": "^2.1.0",
+    "browserify-fs": "^1.0.0",
+    "browserify-zlib": "^0.2.0",
+    "events": "^3.3.0",
     "fs": "^0.0.1-security",
+    "logger": "^0.0.1",
     "node-html-parser": "github:zolexander/node-html-parser",
+    "os-browserify": "^0.3.0",
     "path": "^0.12.7",
-    "pretty": "^2.0.0"
+    "path-browserify": "^1.0.1",
+    "pretty": "^2.0.0",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",

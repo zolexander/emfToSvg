@@ -1,8 +1,9 @@
 import fs from 'fs';
 import { createGunzip } from 'zlib';
 import { Writable } from "stream";
-import log from 'electron-log/main';
+import {createLogger} from 'logger';
 import path from 'path';
+import Logger from 'electron-log';
 
 let  firstRun = true;
 
@@ -29,11 +30,11 @@ export async function  extractGzip(str: string) {
         gzipStream.pipe(gunzip).pipe(write);
 
         gzipStream.on('error', (err) => {
-        log.info(`Error extracting Gzip: ${err}`);
+        logMessage(`Error extracting Gzip: ${err}`);
         reject(err);
         });
         gunzip.on('finish', () => {
-        log.info('Gzip extraction complete!');
+        logMessage('Gzip extraction complete!');
         resolve(write.getResult());
         });
         
@@ -41,20 +42,14 @@ export async function  extractGzip(str: string) {
 }
 export function logMessage(message:any,level?:string) {
         if(firstRun) {
-            log.initialize();
-            log.transports.file.level = 'info'; // or 'debug', 'warn', 'error', or 'silly'
+            var logger = createLogger(path.join(__dirname, 'logs','app.log'));
             let directoryPath = path.join(__dirname, 'logs');
             if(!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath);
             }
-             
-            log.transports.file.resolvePathFn = () =>{
-                return path.join(directoryPath,'app.log');
-            }
             firstRun = false;
         }
-        if(level == 'debug') log.debug(message)
-        log.info(message)
+        logger.info(message)
     
 }
 export function allowedExtensions(imagetypes:Array<string>,str:string) {

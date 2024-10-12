@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist/umd'),
     filename: 'index.js',
-    library: 'emfToSvg',
+    library: 'exampleTypescriptPackage',
     libraryTarget: 'umd',
     globalObject: 'this',
   },
@@ -25,9 +25,23 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [path.resolve(process.cwd(), 'src'), 'node_modules'],
-        extensions: ['*', '.js', '.jsx', '.json','.ts'],
-        symlinks: false,
-        cacheWithContext: false
+    extensions: ['.ts', '.js', '.tsx', '.jsx'],
+    fallback: {
+      "os": require.resolve("os-browserify/browser"),
+      "fs": require.resolve('browserify-fs'),
+      "tls": false,
+      "net": false,
+      "path": require.resolve("path-browserify"),
+      "zlib": require.resolve('browserify-zlib'),
+      "http": false,
+      "https": false,
+      "stream": require.resolve('stream-browserify'),
+      "crypto": false,
+      "events": require.resolve("events/"),
+      "util": require.resolve("util/"),
+      "sys": require.resolve('util/'),
+      "assert": require.resolve('assert/')
+       //if you want to use this module also don't forget npm i crypto-browserify 
+    } 
   },
 }
