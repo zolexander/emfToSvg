@@ -1,9 +1,7 @@
 import fs from 'fs';
 import { createGunzip } from 'zlib';
 import { Writable } from "stream";
-import {createLogger} from 'logger';
 import path from 'path';
-import Logger from 'electron-log';
 
 let  firstRun = true;
 
@@ -41,16 +39,21 @@ export async function  extractGzip(str: string) {
     });
 }
 export function logMessage(message:any,level?:string) {
-        if(firstRun) {
-            var logger = createLogger(path.join(__dirname, 'logs','app.log'));
+    var logPath = path.join(__dirname, 'logs','app.log');    
+    if(firstRun) {
             let directoryPath = path.join(__dirname, 'logs');
             if(!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath);
             }
+            if(!fs.existsSync(logPath)) {
+                fs.writeFileSync(logPath,message);
+            } else {
+                fs.appendFileSync(logPath,message)
+            }
             firstRun = false;
         }
-        logger.info(message)
-    
+        console.log(message);
+        fs.appendFileSync(logPath,message);  
 }
 export function allowedExtensions(imagetypes:Array<string>,str:string) {
     let result = false;

@@ -92,13 +92,14 @@ export class EMFConverter {
             return result;
         }
     }
-    async convertEmf(inputFile:string|Buffer,settings?: IRendererSettings|{outFile:string}) {
+    public convertEMFBuffer(buffer:Buffer,settings?: IRendererSettings|{outFile:string}) {
+        let blob = this._toArrayBuffer(buffer);
+        if (settings) return this._convert(blob,settings);
+        else return this._convert(blob)
+    }
+    async convertEmf(inputFile:string,settings?: IRendererSettings|{outFile:string}) {
         let blob: ArrayBuffer;
-        if(typeof inputFile === 'string'){
            blob = await this._readFileToBlob(inputFile);
-        } else {
-            blob = this._toArrayBuffer(inputFile);
-        } 
         if(settings) return this._convert(blob,settings);
         else return this._convert(blob);
     }

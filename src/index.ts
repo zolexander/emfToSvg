@@ -1,3 +1,3 @@
 import { EMFConverter,EMFConvertResult } from './emfjs/EMF'
-
-export { EMFConvertResult,EMFConverter }
+import { WMFConvertResult,WMFConverter } from './wmfjs/WMF'
+export { EMFConvertResult,EMFConverter,WMFConvertResult,WMFConverter }
