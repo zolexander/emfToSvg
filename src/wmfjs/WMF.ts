@@ -4,7 +4,7 @@ import { Renderer } from './Renderer';
 import { WMFRecords } from './WMFRecords';
 import { WMFJSError } from './Helper';
 import { Helper } from './Helper';
-import { extractGzip } from '../emfutils';
+import { extractGzip,toArrayBuffer,readFileToBlob } from '../emfutils';
 export interface WMFConvertResult {
     svg: string;
     returnValue: number;
@@ -14,20 +14,6 @@ export class WMFConverter {
     logger: (message:string,level?:string) => void;
     constructor(logger : (message:string,level?:string)=> void) {
         this.logger = logger
-    }
-    private async _readFileToBlob(filePath: string): Promise<ArrayBuffer> {
-
-        const fileBuffer = await fs.promises.readFile(filePath);
-        let arrayBuffer = this._toArrayBuffer(fileBuffer);
-        return arrayBuffer;
-    }
-    private _toArrayBuffer(buffer:Buffer) {
-        var ab = new ArrayBuffer(buffer.length);
-        var view = new Uint8Array(ab);
-        for (var i = 0; i < buffer.length; ++i) {
-            view[i] = buffer[i];
-        }
-        return ab;
     }
 
     private _convert(blob:ArrayBuffer) {
@@ -70,7 +56,7 @@ export class WMFConverter {
         }
     }
     async convertWMF(inputFile:string) {
-        let blob = await this._readFileToBlob(inputFile);
+        let blob = await readFileToBlob(inputFile);
         return this._convert(blob);
     }
     async convertWMFToFile(inputFile:string,outFile:string) {
@@ -81,7 +67,7 @@ export class WMFConverter {
 
     public async convertWMZ(inputFile:string ) {
         return extractGzip(inputFile).then((value:Buffer)=>{
-            return this._convert(this._toArrayBuffer(value));
+            return this._convert(toArrayBuffer(value));
         })
     }
     public async convertWMZToFile(inputFile:string,outFile:string) {

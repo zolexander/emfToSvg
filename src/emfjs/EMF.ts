@@ -1,9 +1,9 @@
-import { IRendererSettings, Renderer } from "../emfjs";
+import { IRendererSettings, Renderer } from "./Renderer";
 import { EMFJSError, Helper } from "./Helper";
 import { EMFRecords } from "./EMFRecords";
 import { Blob } from "./Blob";
 import fs from 'fs';
-import { extractGzip } from "../emfutils";
+import { extractGzip,readFileToBlob,toArrayBuffer } from "../emfutils";
 
 export interface EMFConvertResult {
     svg: string;
@@ -16,20 +16,7 @@ export class EMFConverter {
     constructor(logger:(message:string) => void) {
         this.logger = logger;
     }
-    private async _readFileToBlob(filePath: string): Promise<ArrayBuffer> {
 
-        const fileBuffer = await fs.promises.readFile(filePath);
-        let arrayBuffer = this._toArrayBuffer(fileBuffer);
-        return arrayBuffer;
-    }
-    private _toArrayBuffer(buffer:Buffer) {
-        var ab = new ArrayBuffer(buffer.length);
-        var view = new Uint8Array(ab);
-        for (var i = 0; i < buffer.length; ++i) {
-            view[i] = buffer[i];
-        }
-        return ab;
-    }
     private _getSize(reader: Blob) {
         const type = reader.readUint32();
         if (type !== 0x00000001) {
@@ -41,7 +28,7 @@ export class EMFConverter {
         }
         return size;
     }
-    private _convert(blob:ArrayBuffer,settings?:IRendererSettings|any) {
+    private _convert(blob:ArrayBuffer,settings?: IRendererSettings) {
         var renderer = new Renderer(blob);
         const reader = new Blob(blob);
         try {
@@ -50,20 +37,7 @@ export class EMFConverter {
             this.logger(`[EMFHEADER] displayDevXyUM: ${records._header.displayDevCxUm/1000}displayDevCyUm: ${records._header.displayDevCyUm/1000}`)
             this.logger(`[ConvertEMF] ${records._header.toString()}`);
             var result: EMFConvertResult;
-            if(settings && !settings.hasOwnProperty('width') && settings.hasOwnProperty('outFile')) {
-                let outPath = settings.outFile;
-                settings={
-                    width: `${Math.abs(records._header.bounds.right - records._header.bounds.left)}px`,
-                    height: `${Math.abs(records._header.bounds.bottom - records._header.bounds.top)}px`,
-                    wExt: Math.abs(records._header.bounds.right - records._header.bounds.left),
-                    hExt:  Math.abs(records._header.bounds.bottom - records._header.bounds.top),
-                    xExt: Math.abs(records._header.bounds.right - records._header.bounds.left),
-                    yExt: Math.abs(records._header.bounds.bottom - records._header.bounds.top),
-                    mapMode: 8,
-                    endScale: 0.1,
-                    outFile: outPath
-                };
-            } else if(!settings) {
+            if(!settings) {
                 settings={
                     width: `${Math.abs(records._header.bounds.right - records._header.bounds.left)}px`,
                     height: `${Math.abs(records._header.bounds.bottom - records._header.bounds.top)}px`,
@@ -74,7 +48,7 @@ export class EMFConverter {
                     mapMode: 8,
                     endScale: 0.1,
                 };
-            }
+              }
             var svg = renderer.render(settings);
             result= {
                 svg: svg,
@@ -95,34 +69,34 @@ export class EMFConverter {
             return result;
         }
     }
-    public convertEMFBuffer(buffer:Buffer,settings?: IRendererSettings|{outFile:string}) {
-        let blob = this._toArrayBuffer(buffer);
+    public convertEMFBuffer(buffer:Buffer,settings?: IRendererSettings) {
+        let blob = toArrayBuffer(buffer);
         if (settings) return this._convert(blob,settings);
         else return this._convert(blob)
     }
-    async convertEmf(inputFile:string,settings?: IRendererSettings|{outFile:string}) {
+    async convertEmf(inputFile:string,settings?: IRendererSettings) {
         let blob: ArrayBuffer;
-           blob = await this._readFileToBlob(inputFile);
+           blob = await readFileToBlob(inputFile);
         if(settings) return this._convert(blob,settings);
         else return this._convert(blob);
     }
-    async convertEmfToFile(inputFile:string,settings: IRendererSettings|{outFile:string}) {
+    async convertEmfToFile(inputFile:string,settings: IRendererSettings,outFile:string) {
         let result = await this.convertEmf(inputFile,settings);
-        if(result.svg) fs.writeFileSync(settings.outFile,result.svg.toString());
+        if(result.svg && result.returnValue == 0) fs.writeFileSync(outFile,result.svg.toString());
         return result;
     }
 
 
-    public async convertEMZ(inputFile:string,settings?: IRendererSettings|{outFile:string} ) {
+    public async convertEMZ(inputFile:string,settings?: IRendererSettings) {
         return extractGzip(inputFile).then((value:Buffer)=>{
-            if(settings) return this._convert(this._toArrayBuffer(value),settings);
-            else return this._convert(this._toArrayBuffer(value))
+            if(settings) return this._convert(toArrayBuffer(value),settings);
+            else return this._convert(toArrayBuffer(value))
         })
     }
 
-    public async convertEMZToFile(inputFile:string,settings: IRendererSettings|{outFile:string}) {
+    public async convertEMZToFile(inputFile:string,settings: IRendererSettings,outFile:string) {
         let result =  await this.convertEMZ(inputFile,settings);
-        if(result.svg) fs.writeFileSync(settings.outFile,result.svg.toString())
+        if(result.svg) fs.writeFileSync(outFile,result.svg.toString())
         return result;
     }
 }

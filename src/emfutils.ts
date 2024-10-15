@@ -18,7 +18,23 @@ export class WriteStream extends Writable {
     getResult() {
         return this.stream;
     }
+}
+export async  function readFileToBlob(filePath: string): Promise<ArrayBuffer> {
+
+  const fileBuffer = await fs.promises.readFile(filePath);
+  let arrayBuffer = this._toArrayBuffer(fileBuffer);
+  return arrayBuffer;
+}
+
+export function toArrayBuffer(buffer:Buffer) {
+  var ab = new ArrayBuffer(buffer.length);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+      view[i] = buffer[i];
   }
+  return ab;
+}
+
 export async function  extractGzip(str: string) {
     return new Promise<Buffer>((resolve,reject) =>{
         const gzipStream = fs.createReadStream(str);

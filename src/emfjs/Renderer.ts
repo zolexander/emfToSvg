@@ -46,7 +46,6 @@ export interface IRendererSettings {
     yExt: number;
     endScale:number;
     mapMode: number;
-    outFile:string;
 }
 
 export class Renderer {
