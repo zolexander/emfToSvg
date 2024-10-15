@@ -1,6 +1,6 @@
 {
-  "name": "emfToSvg",
-  "version": "0.2.3",
+  "name": "emftosvg",
+  "version": "0.2.2",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -55,6 +55,7 @@
     "assert": "^2.1.0",
     "browserify-fs": "^1.0.0",
     "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "events": "^3.3.0",
     "fs": "^0.0.1-security",
     "logger": "^0.0.1",
