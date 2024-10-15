@@ -75,8 +75,7 @@ export class EMFConverter {
         else return this._convert(blob)
     }
     async convertEmf(inputFile:string,settings?: IRendererSettings) {
-        let blob: ArrayBuffer;
-           blob = await readFileToBlob(inputFile);
+        let blob = await readFileToBlob(inputFile);
         if(settings) return this._convert(blob,settings);
         else return this._convert(blob);
     }

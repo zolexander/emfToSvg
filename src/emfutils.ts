@@ -22,7 +22,7 @@ export class WriteStream extends Writable {
 export async  function readFileToBlob(filePath: string): Promise<ArrayBuffer> {
 
   const fileBuffer = await fs.promises.readFile(filePath);
-  let arrayBuffer = this._toArrayBuffer(fileBuffer);
+  let arrayBuffer = toArrayBuffer(fileBuffer);
   return arrayBuffer;
 }
 
