@@ -80,7 +80,7 @@ export class EMFConverter {
         if(settings) return this._convert(blob,settings);
         else return this._convert(blob);
     }
-    async convertEmfToFile(inputFile:string,settings: IRendererSettings,outFile:string) {
+    async convertEmfToFile(inputFile:string,outFile:string,settings: IRendererSettings) {
         let result = await this.convertEmf(inputFile,settings);
         if(result.svg && result.returnValue == 0) fs.writeFileSync(outFile,result.svg.toString());
         return result;
@@ -94,7 +94,7 @@ export class EMFConverter {
         })
     }
 
-    public async convertEMZToFile(inputFile:string,settings: IRendererSettings,outFile:string) {
+    public async convertEMZToFile(inputFile:string,outFile:string,settings: IRendererSettings) {
         let result =  await this.convertEMZ(inputFile,settings);
         if(result.svg) fs.writeFileSync(outFile,result.svg.toString())
         return result;
