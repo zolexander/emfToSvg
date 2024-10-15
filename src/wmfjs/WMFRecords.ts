@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prettier/prettier */
 /*
 
@@ -150,6 +151,7 @@ export class WMFRecords {
                     break;
                 }
                 case Helper.GDI.RecordType.META_DIBSTRETCHBLT: {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const haveSrcDib = ((type >> 8) + 3 !== size);
                     const rasterOp = reader.readUint16() | (reader.readUint16() << 16);
                     const srcH = reader.readInt16();

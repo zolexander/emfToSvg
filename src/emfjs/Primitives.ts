@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -6,7 +8,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
+of this software and associated documentation files (the 'Software'), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -15,7 +17,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,8 +27,8 @@ SOFTWARE.
 
 */
 
-import { Blob } from "./Blob";
-import { EMFJSError } from "./Helper";
+import { Blob } from './Blob';
+import { EMFJSError } from './Helper';
 
 export class PointS {
     public x: number;
@@ -38,7 +40,7 @@ export class PointS {
         } else {
             if(x) this.x = x;
             if(y) this.y = y;
-           
+
         }
     }
 
@@ -47,7 +49,7 @@ export class PointS {
     }
 
     public toString(): string {
-        return `{"x":"${this.x}","y":"${this.y}"}`;
+        return `{'x':'${this.x}','y':'${this.y}'}`;
     }
 }
 
@@ -61,7 +63,7 @@ export class PointL {
         } else {
             if(x) this.x = x;
             if(y) this.y = y;
-           
+
         }
     }
 
@@ -70,7 +72,7 @@ export class PointL {
     }
 
     public toString(): string {
-        return `{"x": "${this.x}","y":"${this.y}"}`;
+        return `{'x': '${this.x}','y':'${this.y}'}`;
     }
 }
 
@@ -98,8 +100,8 @@ export class RectL {
     }
 
     public toString(): string {
-        return "{left: " + this.left + ", top: " + this.top + ", right: " + this.right
-            + ", bottom: " + this.bottom + " }";
+        return '{left: ' + this.left + ', top: ' + this.top + ', right: ' + this.right
+            + ', bottom: ' + this.bottom + ' }';
     }
 
     public empty(): boolean {
@@ -137,7 +139,7 @@ export class SizeL {
     }
 
     public toString(): string {
-        return `{"cx":"${this.cx}","cy": "${this.cy}"}`;
+        return `{'cx':'${this.cx}','cy': '${this.cy}'}`;
     }
 }
 
@@ -149,16 +151,16 @@ export class Obj {
     }
 
     public clone(): Obj {
-        throw new EMFJSError("clone not implemented");
+        throw new EMFJSError('clone not implemented');
     }
 
     public toString(): string {
-        throw new EMFJSError("toString not implemented");
+        throw new EMFJSError('toString not implemented');
     }
 }
-export function resizePath(d:string,scale:number) {
-    let resdArray: Array<string> = [];
-    let pathArray = d.split(' ');
+export function resizePath(d:string,scale:number): string {
+    const resdArray: Array<string> = [];
+    const pathArray = d.split(' ');
     const regex = /^[a-zA-Z]+$/;
     pathArray.forEach((element:string) =>{
         if(!regex.test(element)){
@@ -170,11 +172,11 @@ export function resizePath(d:string,scale:number) {
     return resdArray.join(' ');
 }
 
-export function resizeViewBox(str:string,scale:number) {
-    let viewBoxArr = str.split(' ');
-    let resultArr: Array<string> = [];
+export function resizeViewBox(str:string,scale:number): string {
+    const viewBoxArr = str.split(' ');
+    const resultArr: Array<string> = [];
     viewBoxArr.forEach((el:any) => {
          resultArr.push((el*scale).toString())
     });
-    return resultArr.join(" ");
+    return resultArr.join(' ');
 }

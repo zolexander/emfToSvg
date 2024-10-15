@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-var */
+/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -6,7 +9,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
+of this software and associated documentation files (the 'Software'), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -15,7 +18,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,7 +28,6 @@ SOFTWARE.
 
 */
 import { logMessage } from '../emfutils';
-import fs from 'fs';
 export class EMFJSError extends Error {
     constructor(message: string) {
         super(message); // 'Error' breaks prototype chain here
@@ -33,7 +35,7 @@ export class EMFJSError extends Error {
     }
 }
 
-let isLoggingEnabled = true;
+var isLoggingEnabled = true;
 
 export function loggingEnabled(enabled: boolean): void {
     isLoggingEnabled = enabled;
@@ -329,7 +331,7 @@ export class Helper {
     }
 
     public static _makeUniqueId(prefix: string): string {
-        return "EMFJS_" + prefix + (this._uniqueId++);
+        return 'EMFJS_' + prefix + (this._uniqueId++);
     }
 
     public static _writeUint32Val(uint8arr: Uint8Array, pos: number, val: number): void {
@@ -340,7 +342,7 @@ export class Helper {
     }
 
     public static _blobToBinary(blob: Uint8Array): string {
-        let ret = "";
+        let ret = '';
         const len = blob.length;
         for (let i = 0; i < len; i++) {
             ret += String.fromCharCode(blob[i]);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-var */
 /* eslint-disable prettier/prettier */
 /*
 
@@ -34,7 +36,7 @@ export class WMFJSError extends Error {
     }
 }
 
-let isLoggingEnabled = true;
+var  isLoggingEnabled = true;
 
 export function loggingEnabled(enabled: boolean): void {
     isLoggingEnabled = enabled;

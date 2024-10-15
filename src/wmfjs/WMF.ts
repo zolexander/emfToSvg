@@ -2,11 +2,8 @@
 /* eslint-disable no-var */
 /* eslint-disable prettier/prettier */
 import fs from 'fs'
-import { Blob } from './Blob'
 import { Renderer } from './Renderer'
-import { WMFRecords } from './WMFRecords'
 import { WMFJSError } from './Helper'
-import { Helper } from './Helper'
 import { extractGzip } from '../emfutils'
 export interface WMFConvertResult {
     svg: string;
@@ -36,6 +33,7 @@ export class WMFConverter {
     private _convert(blob:ArrayBuffer) {
         const renderer = new Renderer(blob);
         try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const records = renderer._img?.records;
         const placable = renderer._img?._placable.boundingBox
         const settings = placable?.getSettings();

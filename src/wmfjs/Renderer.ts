@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable prettier/prettier */
 /*
 
@@ -30,8 +32,7 @@ import { Blob } from './Blob'
 import { GDIContext } from './GDIContext'
 import { Helper, WMFJSError } from './Helper'
 import { WMFRecords } from './WMFRecords'
-import { HTMLElement, parse, }  from 'node-html-parser'
-import fs from 'fs'
+import { HTMLElement, parse }  from 'node-html-parser'
 export interface IRendererSettings {
     width: string;
     height: string;
