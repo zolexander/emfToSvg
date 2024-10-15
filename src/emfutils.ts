@@ -1,8 +1,3 @@
-/* eslint-disable no-var */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable prettier/prettier */
 import fs from 'fs';
 import { createGunzip } from 'zlib';
 import { Writable } from "stream";
@@ -46,7 +41,7 @@ export async function  extractGzip(str: string) {
 export function logMessage(message:any,level?:string) {
     var logPath = path.join(__dirname, 'logs','app.log');
     if(firstRun) {
-            const directoryPath = path.join(__dirname, 'logs');
+            let directoryPath = path.join(__dirname, 'logs');
             if(!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath);
             }

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -25,10 +24,11 @@ SOFTWARE.
 
 */
 
-import { Bitmap16, DIBitmap, PatternBitmap16 } from './Bitmap'
-import { Blob } from './Blob'
-import { Helper } from './Helper'
-import { Obj, PointS } from './Primitives';
+import { Bitmap16, DIBitmap, PatternBitmap16 } from "./Bitmap";
+import { Blob } from "./Blob";
+import { Helper } from "./Helper";
+import { Obj, PointS } from "./Primitives";
+
 export class ColorRef {
     public r: number;
     public g: number;
@@ -57,7 +57,7 @@ export class ColorRef {
     }
 
     public toString(): string {
-        return '{r: ' + this.r + ', g: ' + this.g + ', b: ' + this.b + '}';
+        return "{r: " + this.r + ", g: " + this.g + ", b: " + this.b + "}";
     }
 }
 
@@ -79,7 +79,7 @@ export class Font extends Obj {
     public facename: string;
 
     constructor(reader: Blob|null, copy: Font | number|null) {
-        super('font');
+        super("font");
         if (reader != null) {
             this.height = reader.readInt16();
             this.width = reader.readInt16();
@@ -133,7 +133,7 @@ export class Font extends Obj {
             this.quality = 0;
             this.pitch = 0;
             this.family = 0;
-            this.facename = 'Helvetica';
+            this.facename = "Helvetica";
         }
     }
 
@@ -155,7 +155,7 @@ export class Brush extends Obj {
     public hatchstyle: number;
 
     constructor(reader: Blob|null, copy: Brush | number |null, forceDibPattern?: boolean | PatternBitmap16) {
-        super('brush');
+        super("brush");
         if (reader != null) {
             const dataLength = copy as number;
             const start = reader.pos;
@@ -216,19 +216,19 @@ export class Brush extends Obj {
     }
 
     public toString(): string {
-        let ret = '{style: ' + this.style;
+        let ret = "{style: " + this.style;
         switch (this.style) {
             case Helper.GDI.BrushStyle.BS_SOLID:
-                ret += ', color: ' + this.color.toString();
+                ret += ", color: " + this.color.toString();
                 break;
             case Helper.GDI.BrushStyle.BS_DIBPATTERNPT:
-                ret += ', colorusage: ' + this.colorusage;
+                ret += ", colorusage: " + this.colorusage;
                 break;
             case Helper.GDI.BrushStyle.BS_HATCHED:
-                ret += ', color: ' + this.color.toString() + ', hatchstyle: ' + this.hatchstyle;
+                ret += ", color: " + this.color.toString() + ", hatchstyle: " + this.hatchstyle;
                 break;
         }
-        return ret + '}';
+        return ret + "}";
     }
 }
 
@@ -240,7 +240,7 @@ export class Pen extends Obj {
     public join: number;
 
     constructor(reader: Blob|null, style?: number, width?: PointS, color?: ColorRef, linecap?: number, join?: number) {
-        super('pen');
+        super("pen");
         if (reader != null) {
             style = reader.readUint16();
             this.style = style & 0xFF;
@@ -262,8 +262,8 @@ export class Pen extends Obj {
     }
 
     public toString(): string {
-        return '{style: ' + this.style + ', width: ' + this.width.toString() + ', color: ' + this.color.toString()
-            + ', linecap: ' + this.linecap + ', join: ' + this.join + '}';
+        return "{style: " + this.style + ", width: " + this.width.toString() + ", color: " + this.color.toString()
+            + ", linecap: " + this.linecap + ", join: " + this.join + "}";
     }
 }
 
@@ -299,7 +299,7 @@ export class Palette extends Obj {
     public entries: PaletteEntry[];
 
     constructor(reader: Blob|null, copy?: Palette) {
-        super('palette');
+        super("palette");
         if (reader != null) {
             this.start = reader.readUint16();
             let cnt = reader.readUint16();
@@ -325,6 +325,6 @@ export class Palette extends Obj {
     }
 
     public toString(): string {
-        return '{ #entries: ' + this.entries.length + '}'; // TODO
+        return "{ #entries: " + this.entries.length + "}"; // TODO
     }
 }

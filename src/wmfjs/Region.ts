@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -7,7 +5,7 @@ The MIT License (MIT)
 Copyright (c) 2015 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -16,7 +14,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -26,9 +24,9 @@ SOFTWARE.
 
 */
 
-import { Blob } from './Blob';
-import { Helper, WMFJSError } from './Helper';
-import { Obj, Rect } from './Primitives';
+import { Blob } from "./Blob";
+import { Helper, WMFJSError } from "./Helper";
+import { Obj, Rect } from "./Primitives";
 
 export class Region extends Obj {
     public bounds: Rect|null;
@@ -36,11 +34,11 @@ export class Region extends Obj {
     public complexity: number;
 
     constructor(reader: Blob|null, copy?: Region|null) {
-        super('region');
+        super("region");
         if (reader != null) {
             reader.skip(2);
             if (reader.readInt16() !== 6) {
-                throw new WMFJSError('Invalid region identifier');
+                throw new WMFJSError("Invalid region identifier");
             }
             reader.skip(2);
             const rgnSize = reader.readInt16();
@@ -80,10 +78,10 @@ export class Region extends Obj {
     }
 
     public toString(): string {
-        const _complexity = ['null', 'simple', 'complex'];
-        return '{complexity: ' + _complexity[this.complexity]
-            + ' bounds: ' + (this.bounds != null ? this.bounds.toString() : '[none]')
-            + ' #scans: ' + (this.scans != null ? this.scans.length : '[none]') + '}';
+        const _complexity = ["null", "simple", "complex"];
+        return "{complexity: " + _complexity[this.complexity]
+            + " bounds: " + (this.bounds != null ? this.bounds.toString() : "[none]")
+            + " #scans: " + (this.scans != null ? this.scans.length : "[none]") + "}";
     }
 
     public _updateComplexity(): void {
@@ -112,7 +110,7 @@ export class Region extends Obj {
     }
 
     public subtract(rect: Rect): void {
-        Helper.log('[wmf] Region ' + this.toString() + ' subtract ' + rect.toString());
+        Helper.log("[wmf] Region " + this.toString() + " subtract " + rect.toString());
 
         if (this.bounds != null) {
             const isect = this.bounds.intersect(rect);
@@ -140,7 +138,7 @@ export class Region extends Obj {
                         if (scan.top >= scan.bottom) {
                             this.scans[si] = cloned;
                         } else {
-                            Helper.log('[wmf] Region split top scan ' + si + ' for substraction');
+                            Helper.log("[wmf] Region split top scan " + si + " for substraction");
                             this.scans.splice(++si, 0, cloned);
                         }
                         break;
@@ -164,7 +162,7 @@ export class Region extends Obj {
                         if (scan.top >= scan.bottom) {
                             this.scans[si] = cloned;
                         } else {
-                            Helper.log('[wmf] Region split bottom scan ' + si + ' for substraction');
+                            Helper.log("[wmf] Region split bottom scan " + si + " for substraction");
                             this.scans.splice(++si, 0, cloned);
                         }
                         break;
@@ -181,7 +179,7 @@ export class Region extends Obj {
                     while (si < last) {
                         const scan = this.scans[si];
                         if (!scan.subtract(rect.left, rect.right)) {
-                            Helper.log('[wmf] Region remove now empty scan ' + si + ' due to subtraction');
+                            Helper.log("[wmf] Region remove now empty scan " + si + " due to subtraction");
                             this.scans.splice(si, 1);
                             last--;
                             continue;
@@ -235,11 +233,11 @@ export class Region extends Obj {
             }
         }
 
-        Helper.log('[wmf] Region subtraction -> ' + this.toString());
+        Helper.log("[wmf] Region subtraction -> " + this.toString());
     }
 
     public intersect(rect: Rect): void {
-        Helper.log('[wmf] Region ' + this.toString() + ' intersect with ' + rect.toString());
+        Helper.log("[wmf] Region " + this.toString() + " intersect with " + rect.toString());
         if (this.bounds != null) {
             this.bounds = this.bounds.intersect(rect);
             if (this.bounds != null) {
@@ -255,7 +253,7 @@ export class Region extends Obj {
                         }
                     }
                     if (si > 0) {
-                        Helper.log('[wmf] Region remove ' + si + ' scans from top');
+                        Helper.log("[wmf] Region remove " + si + " scans from top");
                         this.scans.splice(0, si);
 
                         // Adjust the first scan's top to match the new bounds.top
@@ -270,13 +268,13 @@ export class Region extends Obj {
                         const scan = this.scans[si];
                         if (scan.top > this.bounds.bottom) {
                             // Remove this and all remaining scans that fall entirely below the new bounds.bottom
-                            Helper.log('[wmf] Region remove ' + (this.scans.length - si) + ' scans from bottom');
+                            Helper.log("[wmf] Region remove " + (this.scans.length - si) + " scans from bottom");
                             this.scans.splice(si, this.scans.length - si);
                             break;
                         }
                         if (!scan.intersect(this.bounds.left, this.bounds.right)) {
                             // Remove now empty scan
-                            Helper.log('[wmf] Region remove now empty scan ' + si + ' due to intersection');
+                            Helper.log("[wmf] Region remove now empty scan " + si + " due to intersection");
                             this.scans.splice(si, 1);
                             continue;
                         }
@@ -295,7 +293,7 @@ export class Region extends Obj {
                 this.complexity = 0;
             }
         }
-        Helper.log('[wmf] Region intersection -> ' + this.toString());
+        Helper.log("[wmf] Region intersection -> " + this.toString());
     }
 
     public offset(offX: number, offY: number): void {
@@ -453,6 +451,6 @@ export class Scan {
     }
 
     public toString(): string {
-        return '{ #scanlines: ' + this.scanlines.length + '}';
+        return "{ #scanlines: " + this.scanlines.length + "}";
     }
 }

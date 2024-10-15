@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -8,7 +5,7 @@ The MIT License (MIT)
 Copyright (c) 2015 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -17,7 +14,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -27,12 +24,13 @@ SOFTWARE.
 
 */
 
-import { SVG } from '../SVG'
-import { Blob } from './Blob'
-import { GDIContext } from './GDIContext'
-import { Helper, WMFJSError } from './Helper'
-import { WMFRecords } from './WMFRecords'
-import { HTMLElement, parse }  from 'node-html-parser'
+import { SVG } from "../SVG";
+import { Blob } from "./Blob";
+import { GDIContext } from "./GDIContext";
+import { Helper, WMFJSError } from "./Helper";
+import { WMFRecords } from "./WMFRecords";
+import { HTMLElement, parse, }  from 'node-html-parser';
+import fs from 'fs';
 export interface IRendererSettings {
     width: string;
     height: string;
@@ -47,7 +45,7 @@ export class Renderer {
 
     constructor(blob: ArrayBuffer) {
         this.parse(blob);
-        this._rootElement = parse('<div></div>',{
+        this._rootElement = parse("<div></div>",{
             lowerCaseTagName: false,
             comment: true ,
             voidTag:{
@@ -55,11 +53,11 @@ export class Renderer {
                 closingSlash: true
               },
         });
-        Helper.log('WMFJS.Renderer instantiated');
+        Helper.log("WMFJS.Renderer instantiated");
     }
 
     public render(info: IRendererSettings) {
-        const svgElement:any = this._rootElement.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const svgElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "svg");
 
         this._render(
             new SVG(svgElement,this._rootElement),
@@ -67,11 +65,11 @@ export class Renderer {
             info.xExt,
             info.yExt
         );
-        svgElement.setAttribute('viewBox', [0, 0, Math.abs(info.xExt), Math.abs(info.yExt)].join(' '));
-        svgElement.setAttribute('preserveAspectRatio', 'none'); // TODO: MM_ISOTROPIC vs MM_ANISOTROPIC
-        svgElement.setAttribute('width', Math.abs(parseFloat(info.width)));
-        svgElement.setAttribute('height', Math.abs(parseFloat(info.height)));
-        const svgString =`<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n ${svgElement.toString().replace(/<svg\s+[^>]*>/,'').replace('</svg>','').replaceAll('-','')}`;
+        svgElement.setAttribute("viewBox", [0, 0, Math.abs(info.xExt), Math.abs(info.yExt)].join(" "));
+        svgElement.setAttribute("preserveAspectRatio", "none"); // TODO: MM_ISOTROPIC vs MM_ANISOTROPIC
+        svgElement.setAttribute("width", Math.abs(parseFloat(info.width)));
+        svgElement.setAttribute("height", Math.abs(parseFloat(info.height)));
+        let svgString =`<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n ${svgElement.toString().replace(/<svg\s+[^>]*>/,'').replace('</svg>','').replaceAll('-','')}`;
         return svgString;
     }
 
@@ -111,7 +109,7 @@ export class Renderer {
         }
 
         if (this._img == null) {
-            throw new WMFJSError('Format not recognized');
+            throw new WMFJSError("Format not recognized");
         }
     }
 
@@ -120,9 +118,9 @@ export class Renderer {
         const gdi = new GDIContext(svg);
         gdi.setViewportExt(xExt, yExt);
         gdi.setMapMode(mapMode);
-        Helper.log('[WMF] BEGIN RENDERING --->');
+        Helper.log("[WMF] BEGIN RENDERING --->");
         if(this._img) this._img.render(gdi);
-        Helper.log('[WMF] <--- DONE RENDERING');
+        Helper.log("[WMF] <--- DONE RENDERING");
     }
 }
 
@@ -139,7 +137,7 @@ class WMFRect16 {
         this.bottom = reader.readInt16();
     }
     public getSettings() {
-        const settings: IRendererSettings = {
+        let settings: IRendererSettings = {
             width: (this.right -this.left).toFixed(2),
             height: (this.top -this.bottom).toFixed(2),
             xExt: (this.right -this.left),
@@ -149,8 +147,8 @@ class WMFRect16 {
         return settings;
     }
     public toString(): string {
-        return '{left: ' + this.left + ', top: ' + this.top + ', right: ' + this.right
-            + ', bottom: ' + this.bottom + '}';
+        return "{left: " + this.left + ", top: " + this.top + ", right: " + this.right
+            + ", bottom: " + this.bottom + "}";
     }
 }
 
@@ -164,7 +162,7 @@ class WMFPlacable {
         this.unitsPerInch = reader.readInt16();
         reader.skip(4);
         reader.skip(2); // TODO: checksum
-        Helper.log('Got bounding box ' + this.boundingBox + ' and ' + this.unitsPerInch + ' units/inch');
+        Helper.log("Got bounding box " + this.boundingBox + " and " + this.unitsPerInch + " units/inch");
     }
 }
 

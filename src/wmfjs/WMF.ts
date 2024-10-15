@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-var */
-/* eslint-disable prettier/prettier */
-import fs from 'fs'
-import { Renderer } from './Renderer'
-import { WMFJSError } from './Helper'
-import { extractGzip } from '../emfutils'
+import fs from 'fs';
+import { Blob } from './Blob';
+import { Renderer } from './Renderer';
+import { WMFRecords } from './WMFRecords';
+import { WMFJSError } from './Helper';
+import { Helper } from './Helper';
+import { extractGzip } from '../emfutils';
 export interface WMFConvertResult {
     svg: string;
     returnValue: number;
@@ -18,7 +18,7 @@ export class WMFConverter {
     private async _readFileToBlob(filePath: string): Promise<ArrayBuffer> {
 
         const fileBuffer = await fs.promises.readFile(filePath);
-        const arrayBuffer = this._toArrayBuffer(fileBuffer);
+        let arrayBuffer = this._toArrayBuffer(fileBuffer);
         return arrayBuffer;
     }
     private _toArrayBuffer(buffer:Buffer) {
@@ -33,27 +33,26 @@ export class WMFConverter {
     private _convert(blob:ArrayBuffer) {
         const renderer = new Renderer(blob);
         try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const records = renderer._img?.records;
-        const placable = renderer._img?._placable.boundingBox
-        const settings = placable?.getSettings();
+        let records = renderer._img?.records;
+        let placable = renderer._img?._placable.boundingBox
+        let settings = placable?.getSettings();
         if(settings){
             this.logger('settings exists');
             var res = renderer.render(settings);
-            const result = {
+            let result = {
                 svg: res,
                 returnValue: 0
             }
             return result;
         } else {
-            const settings = {
+            let settings = {
                 width: '100px',
                 height: '100px',
                 xExt: 100,
                 yExt: 100,
                 mapMode: 8
             }
-            const res = renderer.render(settings);
+            let res = renderer.render(settings);
             return {
                 svg: res,
                 returnValue: 0
@@ -63,30 +62,30 @@ export class WMFConverter {
             if (e instanceof WMFJSError) {
                 this.logger(e.message);
             }
-            const res = {
+            let res = {
                 svg: '',
                 returnValue: -1
             }
             return res;
         }
     }
-    async convertWMF(inputFile:string): Promise<{ svg:string,returnValue:number }> {
-        const blob = await this._readFileToBlob(inputFile);
+    async convertWMF(inputFile:string) {
+        let blob = await this._readFileToBlob(inputFile);
         return this._convert(blob);
     }
-    async convertWMFToFile(inputFile:string,outFile:string): Promise<{svg:string,returnValue:number}> {
-        const result = await this.convertWMF(inputFile);
+    async convertWMFToFile(inputFile:string,outFile:string) {
+        let result = await this.convertWMF(inputFile);
         if(result && result.svg) fs.writeFileSync(outFile,result.svg.toString());
         return result;
     }
 
-    public async convertWMZ(inputFile:string ):Promise<any> {
+    public async convertWMZ(inputFile:string ) {
         return extractGzip(inputFile).then((value:Buffer)=>{
             return this._convert(this._toArrayBuffer(value));
         })
     }
-    public async convertWMZToFile(inputFile:string,outFile:string):Promise<any> {
-        const result =  await this.convertWMZ(inputFile);
+    public async convertWMZToFile(inputFile:string,outFile:string) {
+        let result =  await this.convertWMZ(inputFile);
         if(result && result.svg) fs.writeFileSync(outFile,result.svg.toString())
         return result;
     }

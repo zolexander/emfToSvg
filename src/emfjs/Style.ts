@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -7,7 +6,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -16,7 +15,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -26,10 +25,10 @@ SOFTWARE.
 
 */
 
-import { DIBitmap } from './Bitmap';
-import { Blob } from './Blob';
-import { Helper } from './Helper';
-import { Obj, PointL } from './Primitives';
+import { DIBitmap } from "./Bitmap";
+import { Blob } from "./Blob";
+import { Helper } from "./Helper";
+import { Obj, PointL } from "./Primitives";
 
 export class ColorRef {
     public r: number;
@@ -59,7 +58,7 @@ export class ColorRef {
     }
 
     public toString(): string {
-        return '{r: ' + this.r + ', g: ' + this.g + ', b: ' + this.b + '}';
+        return "{r: " + this.r + ", g: " + this.g + ", b: " + this.b + "}";
     }
 }
 
@@ -81,7 +80,7 @@ export class Font extends Obj {
     public facename: string;
 
     constructor(reader: Blob|null, copy: Font | number | null) {
-        super('font');
+        super("font");
         if (reader != null) {
             this.height = reader.readInt32();
             this.width = reader.readInt32();
@@ -135,7 +134,7 @@ export class Font extends Obj {
             this.quality = 0;
             this.pitch = 0;
             this.family = 0;
-            this.facename = 'Helvetica';
+            this.facename = "Helvetica";
         }
     }
 
@@ -159,7 +158,7 @@ export class Brush extends Obj {
         style?: number, color?: ColorRef, pattern?: DIBitmap,
         dibpatternpt?: DIBitmap, hatchstyle?: number
     }) {
-        super('brush');
+        super("brush");
         if (reader != null) {
             const start = reader.pos;
 
@@ -206,16 +205,16 @@ export class Brush extends Obj {
     }
 
     public toString(): string {
-        let ret = '{style: ' + this.style;
+        let ret = "{style: " + this.style;
         switch (this.style) {
             case Helper.GDI.BrushStyle.BS_SOLID:
-                ret += ', color: ' + this.color.toString();
+                ret += ", color: " + this.color.toString();
                 break;
             case Helper.GDI.BrushStyle.BS_HATCHED:
-                ret += ', color: ' + this.color.toString() + ', hatchstyle: ' + this.hatchstyle;
+                ret += ", color: " + this.color.toString() + ", hatchstyle: " + this.hatchstyle;
                 break;
         }
-        return ret + '}';
+        return ret + "}";
     }
 }
 
@@ -227,7 +226,7 @@ export class Pen extends Obj {
 
     constructor(reader: Blob|null, style?: number | null | { header: { off: number, size: number }, data: { off: number, size: number } },
                 width?: number, color?: ColorRef|null, brush?: Brush|null) {
-        super('pen');
+        super("pen");
         if (reader != null) {
             if (style != null) {
                 // LogPenEx
@@ -239,7 +238,7 @@ export class Pen extends Obj {
             } else {
                 // LogPen
                 this.style = reader.readUint32()
-                const pointL = new PointL(reader);
+                let pointL = new PointL(reader);
                 this.width = pointL.x;
                 this.color = new ColorRef(reader);
             }
@@ -262,7 +261,7 @@ export class Pen extends Obj {
     }
 
     public toString(): string {
-        return '{style: ' + this.style + ', width: ' + this.width
-            + ', color: ' + (this.color != null ? this.color.toString() : 'none') + '}';
+        return "{style: " + this.style + ", width: " + this.width
+            + ", color: " + (this.color != null ? this.color.toString() : "none") + "}";
     }
 }

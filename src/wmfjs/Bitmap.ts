@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -6,7 +5,7 @@ The MIT License (MIT)
 Copyright (c) 2015 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -15,7 +14,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,8 +24,8 @@ SOFTWARE.
 
 */
 
-import { Blob } from './Blob';
-import { Helper, WMFJSError } from './Helper';
+import { Blob } from "./Blob";
+import { Helper, WMFJSError } from "./Helper";
 
 interface Bitmap {
     getWidth(): number
@@ -160,16 +159,16 @@ export class DIBitmap implements Bitmap {
     public base64ref(): string {
         const prevpos = this._reader.pos;
         this._reader.seek(this._offset);
-        let mime = 'image/bmp';
+        let mime = "image/bmp";
         const header = this._info.header();
         let data;
         if (header instanceof BitmapInfoHeader && header.compression != null) {
             switch (header.compression) {
                 case Helper.GDI.BitmapCompression.BI_JPEG:
-                    mime = 'data:image/jpeg';
+                    mime = "data:image/jpeg";
                     break;
                 case Helper.GDI.BitmapCompression.BI_PNG:
-                    mime = 'data:image/png';
+                    mime = "data:image/png";
                     break;
                 default:
                     data = this.makeBitmapFileHeader();
@@ -185,7 +184,7 @@ export class DIBitmap implements Bitmap {
             data = this._reader.readBinary(this._size);
         }
 
-        const ref = 'data:' + mime + ';base64,' + btoa(data);
+        const ref = "data:" + mime + ";base64," + btoa(data);
         this._reader.seek(prevpos);
         return ref;
     }
@@ -229,7 +228,7 @@ export class Bitmap16 implements Bitmap {
             this.bitsOffset = reader.pos;
             this.bitsSize = (((this.width * this.bitsPixel + 15) >> 4) << 1) * this.height;
             if (this.bitsSize > size - 10) {
-                throw new WMFJSError('Bitmap should have ' + this.bitsSize + ' bytes, but has ' + (size - 10));
+                throw new WMFJSError("Bitmap should have " + this.bitsSize + " bytes, but has " + (size - 10));
             }
         } else {
             const copy = size as Bitmap16;
