@@ -15,5 +15,5 @@ export declare class EMFConverter {
     convertEmf(inputFile: string, settings?: IRendererSettings): Promise<EMFConvertResult>;
     convertEmfToFile(inputFile: string, outFile: string, settings?: IRendererSettings): Promise<EMFConvertResult>;
     convertEMZ(inputFile: string, settings?: IRendererSettings): Promise<EMFConvertResult>;
-    convertEMZToFile(inputFile: string, outFile: string, settings: IRendererSettings): Promise<EMFConvertResult>;
+    convertEMZToFile(inputFile: string, outFile: string, settings?: IRendererSettings): Promise<EMFConvertResult>;
 }
