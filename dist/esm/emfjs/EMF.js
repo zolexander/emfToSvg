@@ -81,7 +81,7 @@ class EMFConverter {
         else
             return this._convert(blob);
     }
-    async convertEmfToFile(inputFile, settings, outFile) {
+    async convertEmfToFile(inputFile, outFile, settings) {
         let result = await this.convertEmf(inputFile, settings);
         if (result.svg && result.returnValue == 0)
             fs_1.default.writeFileSync(outFile, result.svg.toString());
@@ -95,7 +95,7 @@ class EMFConverter {
                 return this._convert((0, emfutils_1.toArrayBuffer)(value));
         });
     }
-    async convertEMZToFile(inputFile, settings, outFile) {
+    async convertEMZToFile(inputFile, outFile, settings) {
         let result = await this.convertEMZ(inputFile, settings);
         if (result.svg)
             fs_1.default.writeFileSync(outFile, result.svg.toString());
