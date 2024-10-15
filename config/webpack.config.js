@@ -40,8 +40,9 @@ module.exports = {
       "events": require.resolve("events/"),
       "util": require.resolve("util/"),
       "sys": require.resolve('util/'),
-      "assert": require.resolve('assert/')
-       //if you want to use this module also don't forget npm i crypto-browserify 
-    } 
+      "assert": require.resolve('assert/'),
+      "buffer": require.resolve("buffer/")
+       //if you want to use this module also don't forget npm i crypto-browserify
+    }
   },
 }
