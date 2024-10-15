@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allowedExtensions = exports.logMessage = exports.extractGzip = exports.WriteStream = void 0;
+exports.allowedExtensions = exports.logMessage = exports.extractGzip = exports.toArrayBuffer = exports.readFileToBlob = exports.WriteStream = void 0;
 const fs_1 = __importDefault(require("fs"));
 const zlib_1 = require("zlib");
 const stream_1 = require("stream");
@@ -23,6 +23,21 @@ class WriteStream extends stream_1.Writable {
     }
 }
 exports.WriteStream = WriteStream;
+async function readFileToBlob(filePath) {
+    const fileBuffer = await fs_1.default.promises.readFile(filePath);
+    let arrayBuffer = this._toArrayBuffer(fileBuffer);
+    return arrayBuffer;
+}
+exports.readFileToBlob = readFileToBlob;
+function toArrayBuffer(buffer) {
+    var ab = new ArrayBuffer(buffer.length);
+    var view = new Uint8Array(ab);
+    for (var i = 0; i < buffer.length; ++i) {
+        view[i] = buffer[i];
+    }
+    return ab;
+}
+exports.toArrayBuffer = toArrayBuffer;
 async function extractGzip(str) {
     return new Promise((resolve, reject) => {
         const gzipStream = fs_1.default.createReadStream(str);

@@ -12,19 +12,6 @@ class WMFConverter {
     constructor(logger) {
         this.logger = logger;
     }
-    async _readFileToBlob(filePath) {
-        const fileBuffer = await fs_1.default.promises.readFile(filePath);
-        let arrayBuffer = this._toArrayBuffer(fileBuffer);
-        return arrayBuffer;
-    }
-    _toArrayBuffer(buffer) {
-        var ab = new ArrayBuffer(buffer.length);
-        var view = new Uint8Array(ab);
-        for (var i = 0; i < buffer.length; ++i) {
-            view[i] = buffer[i];
-        }
-        return ab;
-    }
     _convert(blob) {
         const renderer = new Renderer_1.Renderer(blob);
         try {
@@ -67,7 +54,7 @@ class WMFConverter {
         }
     }
     async convertWMF(inputFile) {
-        let blob = await this._readFileToBlob(inputFile);
+        let blob = await (0, emfutils_1.readFileToBlob)(inputFile);
         return this._convert(blob);
     }
     async convertWMFToFile(inputFile, outFile) {
@@ -78,7 +65,7 @@ class WMFConverter {
     }
     async convertWMZ(inputFile) {
         return (0, emfutils_1.extractGzip)(inputFile).then((value) => {
-            return this._convert(this._toArrayBuffer(value));
+            return this._convert((0, emfutils_1.toArrayBuffer)(value));
         });
     }
     async convertWMZToFile(inputFile, outFile) {
