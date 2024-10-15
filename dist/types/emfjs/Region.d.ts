@@ -1,5 +1,5 @@
-import { Blob } from './Blob';
-import { Obj, RectL } from './Primitives';
+import { Blob } from "./Blob";
+import { Obj, RectL } from "./Primitives";
 export declare class Region extends Obj {
     bounds: RectL | null;
     scans: Scan[] | null;

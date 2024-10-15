@@ -1,6 +1,6 @@
-import { DIBitmap } from './Bitmap';
-import { Blob } from './Blob';
-import { Obj } from './Primitives';
+import { DIBitmap } from "./Bitmap";
+import { Blob } from "./Blob";
+import { Obj } from "./Primitives";
 export declare class ColorRef {
     r: number;
     g: number;

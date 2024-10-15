@@ -1,9 +1,9 @@
-import { SVG } from '../SVG';
-import { DIBitmap } from './Bitmap';
-import { Blob } from './Blob';
-import { PointS, Rect } from './Primitives';
-import { Region } from './Region';
-import { Brush, ColorRef, Font, Palette, Pen } from './Style';
+import { SVG } from "../SVG";
+import { DIBitmap } from "./Bitmap";
+import { Blob } from "./Blob";
+import { PointS, Rect } from "./Primitives";
+import { Region } from "./Region";
+import { Brush, ColorRef, Font, Palette, Pen } from "./Style";
 export declare class GDIContext {
     private _svg;
     private _svgdefs;

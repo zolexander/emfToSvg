@@ -4,11 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.allowedExtensions = exports.logMessage = exports.extractGzip = exports.WriteStream = void 0;
-/* eslint-disable no-var */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable prettier/prettier */
 const fs_1 = __importDefault(require("fs"));
 const zlib_1 = require("zlib");
 const stream_1 = require("stream");
@@ -49,7 +44,7 @@ exports.extractGzip = extractGzip;
 function logMessage(message, level) {
     var logPath = path_1.default.join(__dirname, 'logs', 'app.log');
     if (firstRun) {
-        const directoryPath = path_1.default.join(__dirname, 'logs');
+        let directoryPath = path_1.default.join(__dirname, 'logs');
         if (!fs_1.default.existsSync(directoryPath)) {
             fs_1.default.mkdirSync(directoryPath);
         }

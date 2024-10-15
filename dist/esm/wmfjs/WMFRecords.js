@@ -1,6 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -43,7 +41,7 @@ class WMFRecords {
             reader.seek(curpos);
             const size = reader.readUint32();
             if (size < 3) {
-                throw new Helper_1.WMFJSError('Invalid record size');
+                throw new Helper_1.WMFJSError("Invalid record size");
             }
             const type = reader.readUint16();
             switch (type) {
@@ -148,7 +146,6 @@ class WMFRecords {
                     break;
                 }
                 case Helper_1.Helper.GDI.RecordType.META_DIBSTRETCHBLT: {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const haveSrcDib = ((type >> 8) + 3 !== size);
                     const rasterOp = reader.readUint16() | (reader.readUint16() << 16);
                     const srcH = reader.readInt16();
@@ -263,14 +260,14 @@ class WMFRecords {
                 case Helper_1.Helper.GDI.RecordType.META_SELECTPALETTE: {
                     const idx = reader.readUint16();
                     this._records.push((gdi) => {
-                        gdi.selectObject(idx, 'palette');
+                        gdi.selectObject(idx, "palette");
                     });
                     break;
                 }
                 case Helper_1.Helper.GDI.RecordType.META_SELECTCLIPREGION: {
                     const idx = reader.readUint16();
                     this._records.push((gdi) => {
-                        gdi.selectObject(idx, 'region');
+                        gdi.selectObject(idx, "region");
                     });
                     break;
                 }
@@ -496,7 +493,7 @@ class WMFRecords {
                 case Helper_1.Helper.GDI.RecordType.META_BITBLT:
                 case Helper_1.Helper.GDI.RecordType.META_SETDIBTODEV:
                 default: {
-                    let recordName = 'UNKNOWN';
+                    let recordName = "UNKNOWN";
                     for (const name in Helper_1.Helper.GDI.RecordType) {
                         const recordTypes = Helper_1.Helper.GDI.RecordType;
                         if (recordTypes[name] === type) {
@@ -504,15 +501,15 @@ class WMFRecords {
                             break;
                         }
                     }
-                    Helper_1.Helper.log('[WMF] ' + recordName + ' record (0x' + type.toString(16) + ') at offset 0x'
-                        + curpos.toString(16) + ' with ' + (size * 2) + ' bytes');
+                    Helper_1.Helper.log("[WMF] " + recordName + " record (0x" + type.toString(16) + ") at offset 0x"
+                        + curpos.toString(16) + " with " + (size * 2) + " bytes");
                     break;
                 }
             }
             curpos += size * 2;
         }
         if (!all) {
-            throw new Helper_1.WMFJSError('Could not read all records');
+            throw new Helper_1.WMFJSError("Could not read all records");
         }
     }
     play(gdi) {

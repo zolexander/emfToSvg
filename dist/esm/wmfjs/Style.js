@@ -1,5 +1,4 @@
 "use strict";
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -55,13 +54,13 @@ class ColorRef {
         return (0x1000000 + rgb).toString(16).slice(1);
     }
     toString() {
-        return '{r: ' + this.r + ', g: ' + this.g + ', b: ' + this.b + '}';
+        return "{r: " + this.r + ", g: " + this.g + ", b: " + this.b + "}";
     }
 }
 exports.ColorRef = ColorRef;
 class Font extends Primitives_1.Obj {
     constructor(reader, copy) {
-        super('font');
+        super("font");
         if (reader != null) {
             this.height = reader.readInt16();
             this.width = reader.readInt16();
@@ -116,7 +115,7 @@ class Font extends Primitives_1.Obj {
             this.quality = 0;
             this.pitch = 0;
             this.family = 0;
-            this.facename = 'Helvetica';
+            this.facename = "Helvetica";
         }
     }
     clone() {
@@ -129,7 +128,7 @@ class Font extends Primitives_1.Obj {
 exports.Font = Font;
 class Brush extends Primitives_1.Obj {
     constructor(reader, copy, forceDibPattern) {
-        super('brush');
+        super("brush");
         if (reader != null) {
             const dataLength = copy;
             const start = reader.pos;
@@ -189,25 +188,25 @@ class Brush extends Primitives_1.Obj {
         return new Brush(null, this);
     }
     toString() {
-        let ret = '{style: ' + this.style;
+        let ret = "{style: " + this.style;
         switch (this.style) {
             case Helper_1.Helper.GDI.BrushStyle.BS_SOLID:
-                ret += ', color: ' + this.color.toString();
+                ret += ", color: " + this.color.toString();
                 break;
             case Helper_1.Helper.GDI.BrushStyle.BS_DIBPATTERNPT:
-                ret += ', colorusage: ' + this.colorusage;
+                ret += ", colorusage: " + this.colorusage;
                 break;
             case Helper_1.Helper.GDI.BrushStyle.BS_HATCHED:
-                ret += ', color: ' + this.color.toString() + ', hatchstyle: ' + this.hatchstyle;
+                ret += ", color: " + this.color.toString() + ", hatchstyle: " + this.hatchstyle;
                 break;
         }
-        return ret + '}';
+        return ret + "}";
     }
 }
 exports.Brush = Brush;
 class Pen extends Primitives_1.Obj {
     constructor(reader, style, width, color, linecap, join) {
-        super('pen');
+        super("pen");
         if (reader != null) {
             style = reader.readUint16();
             this.style = style & 0xFF;
@@ -233,8 +232,8 @@ class Pen extends Primitives_1.Obj {
         return new Pen(null, this.style, this.width.clone(), this.color.clone(), this.linecap, this.join);
     }
     toString() {
-        return '{style: ' + this.style + ', width: ' + this.width.toString() + ', color: ' + this.color.toString()
-            + ', linecap: ' + this.linecap + ', join: ' + this.join + '}';
+        return "{style: " + this.style + ", width: " + this.width.toString() + ", color: " + this.color.toString()
+            + ", linecap: " + this.linecap + ", join: " + this.join + "}";
     }
 }
 exports.Pen = Pen;
@@ -262,7 +261,7 @@ class PaletteEntry {
 exports.PaletteEntry = PaletteEntry;
 class Palette extends Primitives_1.Obj {
     constructor(reader, copy) {
-        super('palette');
+        super("palette");
         if (reader != null) {
             this.start = reader.readUint16();
             let cnt = reader.readUint16();
@@ -287,7 +286,7 @@ class Palette extends Primitives_1.Obj {
         return new Palette(null, this);
     }
     toString() {
-        return '{ #entries: ' + this.entries.length + '}'; // TODO
+        return "{ #entries: " + this.entries.length + "}"; // TODO
     }
 }
 exports.Palette = Palette;

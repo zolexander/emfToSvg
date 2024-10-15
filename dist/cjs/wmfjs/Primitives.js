@@ -1,5 +1,4 @@
 "use strict";
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -7,7 +6,7 @@ The MIT License (MIT)
 Copyright (c) 2015 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -16,7 +15,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -45,7 +44,7 @@ class PointS {
         return new PointS(null, this.x, this.y);
     }
     toString() {
-        return '{x: ' + this.x + ', y: ' + this.y + '}';
+        return "{x: " + this.x + ", y: " + this.y + "}";
     }
 }
 exports.PointS = PointS;
@@ -72,8 +71,8 @@ class Rect {
         return new Rect(null, this.left, this.top, this.right, this.bottom);
     }
     toString() {
-        return '{left: ' + this.left + ', top: ' + this.top + ', right: ' + this.right
-            + ', bottom: ' + this.bottom + '}';
+        return "{left: " + this.left + ", top: " + this.top + ", right: " + this.right
+            + ", bottom: " + this.bottom + "}";
     }
     empty() {
         return this.left >= this.right || this.top >= this.bottom;
@@ -95,10 +94,10 @@ class Obj {
         this.type = type;
     }
     clone() {
-        throw new Helper_1.WMFJSError('clone not implemented');
+        throw new Helper_1.WMFJSError("clone not implemented");
     }
     toString() {
-        throw new Helper_1.WMFJSError('toString not implemented');
+        throw new Helper_1.WMFJSError("toString not implemented");
     }
 }
 exports.Obj = Obj;

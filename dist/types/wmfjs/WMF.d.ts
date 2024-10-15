@@ -16,6 +16,12 @@ export declare class WMFConverter {
         svg: string;
         returnValue: number;
     }>;
-    convertWMZ(inputFile: string): Promise<any>;
-    convertWMZToFile(inputFile: string, outFile: string): Promise<any>;
+    convertWMZ(inputFile: string): Promise<{
+        svg: string;
+        returnValue: number;
+    }>;
+    convertWMZToFile(inputFile: string, outFile: string): Promise<{
+        svg: string;
+        returnValue: number;
+    }>;
 }

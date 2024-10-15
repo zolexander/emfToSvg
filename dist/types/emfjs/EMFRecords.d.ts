@@ -1,6 +1,6 @@
-import { Blob } from './Blob';
-import { GDIContext } from './GDIContext';
-import { RectL } from './Primitives';
+import { Blob } from "./Blob";
+import { GDIContext } from "./GDIContext";
+import { RectL } from "./Primitives";
 declare class EmfHeader {
     private size;
     bounds: RectL;

@@ -1,8 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-var */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -11,7 +7,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -20,7 +16,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -44,7 +40,7 @@ class EmfHeader {
         this.bounds = new Primitives_1.RectL(reader);
         this.frame = new Primitives_1.RectL(reader);
         if (reader.readUint32() !== Helper_1.Helper.GDI.FormatSignature.ENHMETA_SIGNATURE) {
-            throw new Helper_1.EMFJSError('Invalid header signature');
+            throw new Helper_1.EMFJSError("Invalid header signature");
         }
         reader.skip(4); // version
         reader.skip(4); // bytes (size of metafile)
@@ -61,11 +57,11 @@ class EmfHeader {
         let hdrSize = headerSize;
         if (descriptionLen > 0) {
             if (descriptionOff < 88) {
-                throw new Helper_1.EMFJSError('Invalid header description offset');
+                throw new Helper_1.EMFJSError("Invalid header description offset");
             }
             hdrSize = descriptionOff + (descriptionLen * 2);
             if (hdrSize > headerSize) {
-                throw new Helper_1.EMFJSError('Invalid header description length');
+                throw new Helper_1.EMFJSError("Invalid header description length");
             }
             const prevPos = reader.pos;
             reader.seek(recordStart + descriptionOff);
@@ -73,7 +69,7 @@ class EmfHeader {
             reader.seek(prevPos);
         }
         else {
-            this.description = '';
+            this.description = "";
         }
         Helper_1.Helper.log(`[EMFHEADER] headersize: ${hdrSize}`);
         if (hdrSize >= 100 && hdrSize <= 108) {
@@ -84,15 +80,15 @@ class EmfHeader {
             const haveOpenGl = reader.readUint32();
             Helper_1.Helper.log(`[EMFHEADER] pixelFormatSize: ${pixelFormatSize} pixelFormatOff: ${pixelFormatOff} openGL: 0x${haveOpenGl.toString(16)}`);
             if (haveOpenGl !== 0) {
-                Helper_1.Helper.log('This class has openGL extension');
+                Helper_1.Helper.log("This class has openGL extension");
             }
             if (pixelFormatOff !== 0) {
                 if (pixelFormatOff < 100 || pixelFormatOff < hdrSize) {
-                    throw new Helper_1.EMFJSError('Invalid pixel format offset');
+                    throw new Helper_1.EMFJSError("Invalid pixel format offset");
                 }
                 hdrSize = pixelFormatOff + pixelFormatSize;
                 if (hdrSize > headerSize) {
-                    throw new Helper_1.EMFJSError('Invalid pixel format size');
+                    throw new Helper_1.EMFJSError("Invalid pixel format size");
                 }
                 // TODO: read pixel format blob
             }
@@ -105,8 +101,8 @@ class EmfHeader {
         }
     }
     toString() {
-        return '{bounds: ' + this.bounds.toString() + ', frame: ' + this.frame.toString()
-            + ', description: ' + this.description + '}';
+        return "{bounds: " + this.bounds.toString() + ", frame: " + this.frame.toString()
+            + ", description: " + this.description + "}";
     }
 }
 class EMFRecords {
@@ -120,7 +116,7 @@ class EMFRecords {
             const type = reader.readUint32();
             const size = reader.readUint32();
             if (size < 8) {
-                throw new Helper_1.EMFJSError('Invalid record size');
+                throw new Helper_1.EMFJSError("Invalid record size");
             }
             switch (type) {
                 case Helper_1.Helper.GDI.RecordType.EMR_EOF:
@@ -470,230 +466,230 @@ class EMFRecords {
                     break;
                 }
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYLINE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYLINE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYLINE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYLINETO:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYLINETO');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYLINETO");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYPOLYLINE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYPOLYLINE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYPOLYLINE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETPIXELV:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETPIXELV');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETPIXELV");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETMAPPERFLAGS:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETMAPPERFLAGS');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETMAPPERFLAGS");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETROP2:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETROP2');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETROP2");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETCOLORADJUSTMENT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETCOLORADJUSTMENT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETCOLORADJUSTMENT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETTEXTCOLOR:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETTEXTCOLOR');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETTEXTCOLOR");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETMETARGN:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETMEARGH');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETMEARGH");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_EXCLUDECLIPRECT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETECLUDECLIPRECT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETECLUDECLIPRECT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_INTERSECTCLIPRECT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETINTERSECTCLIPRECT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETINTERSECTCLIPRECT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SCALEVIEWPORTEXTEX:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETSCALEVIEWPORTEXTEX');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETSCALEVIEWPORTEXTEX");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SCALEWINDOWEXTEX:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SCALEWINDOWEXTEX');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SCALEWINDOWEXTEX");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETWORLDTRANSFORM:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETWORLDTRANSFORM');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETWORLDTRANSFORM");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_MODIFYWORLDTRANSFORM:
-                    Helper_1.Helper.log('[EMFRecords] EMR_MODIFYWORLDTRANSFORM');
+                    Helper_1.Helper.log("[EMFRecords] EMR_MODIFYWORLDTRANSFORM");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_ANGLEARC:
-                    Helper_1.Helper.log('[EMFRecords] EMR_ANGLEARC');
+                    Helper_1.Helper.log("[EMFRecords] EMR_ANGLEARC");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_ELLIPSE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_ELLIPSE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_ELLIPSE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_ARC:
-                    Helper_1.Helper.log('[EMFRecords] EMR_ARC');
+                    Helper_1.Helper.log("[EMFRecords] EMR_ARC");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_CHORD:
-                    Helper_1.Helper.log('[EMFRecords] EMR_CHORD');
+                    Helper_1.Helper.log("[EMFRecords] EMR_CHORD");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_PIE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETPIE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETPIE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SELECTPALETTE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SELECTPLATTE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SELECTPLATTE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_CREATEPALETTE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_CREATEPALETTE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_CREATEPALETTE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETPALETTEENTRIES:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETPALETTEENTRIES');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETPALETTEENTRIES");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_RESIZEPALETTE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_RESIZEPALETTE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_RESIZEPALETTE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_REALIZEPALETTE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_REALIZEPALETTE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_REALIZEPALETTE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_EXTFLOODFILL:
-                    Helper_1.Helper.log('[EMFRecords] EMR_EXTFLOODFILL');
+                    Helper_1.Helper.log("[EMFRecords] EMR_EXTFLOODFILL");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_ARCTO:
-                    Helper_1.Helper.log('[EMFRecords] EMR_ARCTO');
+                    Helper_1.Helper.log("[EMFRecords] EMR_ARCTO");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYDRAW:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYDRAW');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYDRAW");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETARCDIRECTION:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETARCDIRECTION');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETARCDIRECTION");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_STROKEANDFILLPATH:
-                    Helper_1.Helper.log('[EMFRecords] EMR_STROKEANDFILLPATH');
+                    Helper_1.Helper.log("[EMFRecords] EMR_STROKEANDFILLPATH");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_FLATTENPATH:
-                    Helper_1.Helper.log('[EMFRecords] EMR_FLATTENPATH');
+                    Helper_1.Helper.log("[EMFRecords] EMR_FLATTENPATH");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_WIDENPATH:
-                    Helper_1.Helper.log('[EMFRecords] EMR_WIDENPATH');
+                    Helper_1.Helper.log("[EMFRecords] EMR_WIDENPATH");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_COMMENT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_COMMENT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_COMMENT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_FILLRGN:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETFILLRGN');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETFILLRGN");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_FRAMERGN:
-                    Helper_1.Helper.log('[EMFRecords] EMR_FRAMERGN');
+                    Helper_1.Helper.log("[EMFRecords] EMR_FRAMERGN");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_INVERTRGN:
-                    Helper_1.Helper.log('[EMFRecords] EMR_INVERTRGN');
+                    Helper_1.Helper.log("[EMFRecords] EMR_INVERTRGN");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_PAINTRGN:
-                    Helper_1.Helper.log('[EMFRecords] EMR_PAINTRGN');
+                    Helper_1.Helper.log("[EMFRecords] EMR_PAINTRGN");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_BITBLT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_BITBLT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_BITBLT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_STRETCHBLT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SCRETCHBLT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SCRETCHBLT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_MASKBLT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_MASKBLT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_MASKBLT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_PLGBLT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_PLBLT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_PLBLT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETDIBITSTODEVICE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETDIBITSTODEVICE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETDIBITSTODEVICE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_STRETCHDIBITS:
-                    Helper_1.Helper.log('[EMFRecords] EMR_STRETCHDIBITS');
+                    Helper_1.Helper.log("[EMFRecords] EMR_STRETCHDIBITS");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_EXTCREATEFONTINDIRECTW:
-                    Helper_1.Helper.log('[EMFRecords] EMR_EXTCREATEFONTINIRECTW');
+                    Helper_1.Helper.log("[EMFRecords] EMR_EXTCREATEFONTINIRECTW");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_EXTTEXTOUTA:
-                    Helper_1.Helper.log('[EMFRecords] EMR_EXTTEXTOUtA');
+                    Helper_1.Helper.log("[EMFRecords] EMR_EXTTEXTOUtA");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_EXTTEXTOUTW:
-                    Helper_1.Helper.log('[EMFRecords] EMR_EXTTEXTOUTw');
+                    Helper_1.Helper.log("[EMFRecords] EMR_EXTTEXTOUTw");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYPOLYLINE16:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYPOLYLINE16');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYPOLYLINE16");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYDRAW16:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYDRAW16');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYDRAW16");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_CREATEMONOBRUSH:
-                    Helper_1.Helper.log('[EMFRecords] EMR_CREATEMONOBRUSH');
+                    Helper_1.Helper.log("[EMFRecords] EMR_CREATEMONOBRUSH");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_CREATEDIBPATTERNBRUSHPT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_CREATEDIBPATTERNBRUSHPT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_CREATEDIBPATTERNBRUSHPT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYTEXTOUTA:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYTEXTOUTA');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYTEXTOUTA");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_POLYTEXTOUTW:
-                    Helper_1.Helper.log('[EMFRecords] EMR_POLYTEXTOUTW');
+                    Helper_1.Helper.log("[EMFRecords] EMR_POLYTEXTOUTW");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETICMMODE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETICMMODE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETICMMODE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_CREATECOLORSPACE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_CREATECOLORSPACE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_CREATECOLORSPACE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETCOLORSPACE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETCOLORSPACE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETCOLORSPACE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_DELETECOLORSPACE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_DELETECOLORSPACE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_DELETECOLORSPACE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_GLSRECORD:
-                    Helper_1.Helper.log('[EMFRecords] EMR_GLSRECORD');
+                    Helper_1.Helper.log("[EMFRecords] EMR_GLSRECORD");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_GLSBOUNDEDRECORD:
-                    Helper_1.Helper.log('[EMFRecords] EMR_GLSBOUNDEDRECORD');
+                    Helper_1.Helper.log("[EMFRecords] EMR_GLSBOUNDEDRECORD");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_PIXELFORMAT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETPIXELFORMAT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETPIXELFORMAT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_DRAWESCAPE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_DRAWESCAPE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_DRAWESCAPE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_EXTESCAPE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_EXTESCAPE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_EXTESCAPE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SMALLTEXTOUT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SMALLTEXTOUT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SMALLTEXTOUT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_FORCEUFIMAPPING:
-                    Helper_1.Helper.log('[EMFRecords] EMR_FORCEUFIMAPPING');
+                    Helper_1.Helper.log("[EMFRecords] EMR_FORCEUFIMAPPING");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_NAMEDESCAPE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_NAMEDESCAPE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_NAMEDESCAPE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_COLORCORRECTPALETTE:
-                    Helper_1.Helper.log('[EMFRecords] EMR_COLORCORRECTPALETTE');
+                    Helper_1.Helper.log("[EMFRecords] EMR_COLORCORRECTPALETTE");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETICMPROFILEA:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETPICMPROFILEA');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETPICMPROFILEA");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETICMPROFILEW:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETICMPROFILEW');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETICMPROFILEW");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_ALPHABLEND:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETALPHABLEND');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETALPHABLEND");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETLAYOUT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETLAYOUT');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETLAYOUT");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_TRANSPARENTBLT:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETPIXELV');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETPIXELV");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_GRADIENTFILL:
-                    Helper_1.Helper.log('[EMFRecords] EMR_GRADIENTFILL');
+                    Helper_1.Helper.log("[EMFRecords] EMR_GRADIENTFILL");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETLINKEDUFIS:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETLINKEDUFIS');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETLINKEDUFIS");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_SETTEXTJUSTIFICATION:
-                    Helper_1.Helper.log('[EMFRecords] EMR_SETTEXTJUSTIFICATION');
+                    Helper_1.Helper.log("[EMFRecords] EMR_SETTEXTJUSTIFICATION");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_COLORMATCHTOTARGETW:
-                    Helper_1.Helper.log('[EMFRecords] EMR_COLORMATCHTOTARGETW');
+                    Helper_1.Helper.log("[EMFRecords] EMR_COLORMATCHTOTARGETW");
                     break;
                 case Helper_1.Helper.GDI.RecordType.EMR_CREATECOLORSPACEW:
                 default: {
-                    let recordName = 'UNKNOWN';
+                    let recordName = "UNKNOWN";
                     for (const name in Helper_1.Helper.GDI.RecordType) {
                         const recordTypes = Helper_1.Helper.GDI.RecordType;
                         if (recordTypes[name] === type) {
@@ -701,15 +697,15 @@ class EMFRecords {
                             break;
                         }
                     }
-                    Helper_1.Helper.log('[EMFRecords] ' + recordName + ' record (0x' + type.toString(16) + ') at offset 0x'
-                        + curpos.toString(16) + ' with ' + size + ' bytes');
+                    Helper_1.Helper.log("[EMFRecords] " + recordName + " record (0x" + type.toString(16) + ") at offset 0x"
+                        + curpos.toString(16) + " with " + size + " bytes");
                     break;
                 }
             }
             curpos += size;
         }
         if (!all) {
-            throw new Helper_1.EMFJSError('Could not read all records');
+            throw new Helper_1.EMFJSError("Could not read all records");
         }
     }
     play(gdi) {

@@ -1,6 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -9,7 +7,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -18,7 +16,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -47,7 +45,7 @@ class PointS {
         return new PointS(null, this.x, this.y);
     }
     toString() {
-        return `{'x':'${this.x}','y':'${this.y}'}`;
+        return `{"x":"${this.x}","y":"${this.y}"}`;
     }
 }
 exports.PointS = PointS;
@@ -68,7 +66,7 @@ class PointL {
         return new PointL(null, this.x, this.y);
     }
     toString() {
-        return `{'x': '${this.x}','y':'${this.y}'}`;
+        return `{"x": "${this.x}","y":"${this.y}"}`;
     }
 }
 exports.PointL = PointL;
@@ -95,8 +93,8 @@ class RectL {
         return new RectL(null, this.left, this.top, this.right, this.bottom);
     }
     toString() {
-        return '{left: ' + this.left + ', top: ' + this.top + ', right: ' + this.right
-            + ', bottom: ' + this.bottom + ' }';
+        return "{left: " + this.left + ", top: " + this.top + ", right: " + this.right
+            + ", bottom: " + this.bottom + " }";
     }
     empty() {
         return this.left >= this.right || this.top >= this.bottom;
@@ -130,7 +128,7 @@ class SizeL {
         return new SizeL(null, this.cx, this.cy);
     }
     toString() {
-        return `{'cx':'${this.cx}','cy': '${this.cy}'}`;
+        return `{"cx":"${this.cx}","cy": "${this.cy}"}`;
     }
 }
 exports.SizeL = SizeL;
@@ -140,16 +138,16 @@ class Obj {
             this.type = type;
     }
     clone() {
-        throw new Helper_1.EMFJSError('clone not implemented');
+        throw new Helper_1.EMFJSError("clone not implemented");
     }
     toString() {
-        throw new Helper_1.EMFJSError('toString not implemented');
+        throw new Helper_1.EMFJSError("toString not implemented");
     }
 }
 exports.Obj = Obj;
 function resizePath(d, scale) {
-    const resdArray = [];
-    const pathArray = d.split(' ');
+    let resdArray = [];
+    let pathArray = d.split(' ');
     const regex = /^[a-zA-Z]+$/;
     pathArray.forEach((element) => {
         if (!regex.test(element)) {
@@ -163,11 +161,11 @@ function resizePath(d, scale) {
 }
 exports.resizePath = resizePath;
 function resizeViewBox(str, scale) {
-    const viewBoxArr = str.split(' ');
-    const resultArr = [];
+    let viewBoxArr = str.split(' ');
+    let resultArr = [];
     viewBoxArr.forEach((el) => {
         resultArr.push((el * scale).toString());
     });
-    return resultArr.join(' ');
+    return resultArr.join(" ");
 }
 exports.resizeViewBox = resizeViewBox;

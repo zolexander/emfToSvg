@@ -1,4 +1,4 @@
-import { Blob } from './Blob';
+import { Blob } from "./Blob";
 export declare class PointS {
     x: number;
     y: number;

@@ -1,6 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -9,7 +7,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -18,7 +16,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -33,17 +31,17 @@ const Helper_1 = require("./Helper");
 const Primitives_1 = require("./Primitives");
 class Region extends Primitives_1.Obj {
     constructor(reader, copy) {
-        super('region');
+        super("region");
         if (reader != null) {
             const hdrSize = reader.readUint32();
             if (hdrSize !== 32) {
-                throw new Helper_1.EMFJSError('Invalid region header');
+                throw new Helper_1.EMFJSError("Invalid region header");
             }
             reader.skip(4);
             const rectCnt = reader.readUint32();
             const rgnSize = reader.readUint32();
             if (rectCnt * 16 !== rgnSize) {
-                throw new Helper_1.EMFJSError('Invalid region data');
+                throw new Helper_1.EMFJSError("Invalid region data");
             }
             this.bounds = new Primitives_1.RectL(reader);
             this.scans = [];
@@ -85,10 +83,10 @@ class Region extends Primitives_1.Obj {
         return new Region(null, this);
     }
     toString() {
-        const _complexity = ['null', 'simple', 'complex'];
-        return '{complexity: ' + _complexity[this.complexity]
-            + ' bounds: ' + (this.bounds != null ? this.bounds.toString() : '[none]')
-            + ' #scans: ' + (this.scans != null ? this.scans.length : '[none]') + '}';
+        const _complexity = ["null", "simple", "complex"];
+        return "{complexity: " + _complexity[this.complexity]
+            + " bounds: " + (this.bounds != null ? this.bounds.toString() : "[none]")
+            + " #scans: " + (this.scans != null ? this.scans.length : "[none]") + "}";
     }
     _updateComplexity() {
         if (this.bounds == null) {
@@ -118,7 +116,7 @@ class Region extends Primitives_1.Obj {
         }
     }
     subtract(rect) {
-        Helper_1.Helper.log('[emf] Region ' + this.toString() + ' subtract ' + rect.toString());
+        Helper_1.Helper.log("[emf] Region " + this.toString() + " subtract " + rect.toString());
         if (this.bounds != null) {
             const isect = this.bounds.intersect(rect);
             if (isect != null) { // Only need to do anything if there is any chance of an overlap
@@ -144,7 +142,7 @@ class Region extends Primitives_1.Obj {
                             this.scans[si] = cloned;
                         }
                         else {
-                            Helper_1.Helper.log('[emf] Region split top scan ' + si + ' for substraction');
+                            Helper_1.Helper.log("[emf] Region split top scan " + si + " for substraction");
                             this.scans.splice(++si, 0, cloned);
                         }
                         break;
@@ -168,7 +166,7 @@ class Region extends Primitives_1.Obj {
                             this.scans[si] = cloned;
                         }
                         else {
-                            Helper_1.Helper.log('[emf] Region split bottom scan ' + si + ' for substraction');
+                            Helper_1.Helper.log("[emf] Region split bottom scan " + si + " for substraction");
                             this.scans.splice(++si, 0, cloned);
                         }
                         break;
@@ -184,7 +182,7 @@ class Region extends Primitives_1.Obj {
                     while (si < last) {
                         const scan = this.scans[si];
                         if (!scan.subtract(rect.left, rect.right)) {
-                            Helper_1.Helper.log('[emf] Region remove now empty scan ' + si + ' due to subtraction');
+                            Helper_1.Helper.log("[emf] Region remove now empty scan " + si + " due to subtraction");
                             this.scans.splice(si, 1);
                             last--;
                             continue;
@@ -235,10 +233,10 @@ class Region extends Primitives_1.Obj {
                 }
             }
         }
-        Helper_1.Helper.log('[emf] Region subtraction -> ' + this.toString());
+        Helper_1.Helper.log("[emf] Region subtraction -> " + this.toString());
     }
     intersect(rect) {
-        Helper_1.Helper.log('[emf] Region ' + this.toString() + ' intersect with ' + rect.toString());
+        Helper_1.Helper.log("[emf] Region " + this.toString() + " intersect with " + rect.toString());
         if (this.bounds != null) {
             this.bounds = this.bounds.intersect(rect);
             if (this.bounds != null) {
@@ -255,7 +253,7 @@ class Region extends Primitives_1.Obj {
                         }
                     }
                     if (si > 0) {
-                        Helper_1.Helper.log('[emf] Region remove ' + si + ' scans from top');
+                        Helper_1.Helper.log("[emf] Region remove " + si + " scans from top");
                         this.scans.splice(0, si);
                         // Adjust the first scan's top to match the new bounds.top
                         if (this.scans.length > 0) {
@@ -268,13 +266,13 @@ class Region extends Primitives_1.Obj {
                         const scan = this.scans[si];
                         if (scan.top > this.bounds.bottom) {
                             // Remove this and all remaining scans that fall entirely below the new bounds.bottom
-                            Helper_1.Helper.log('[emf] Region remove ' + (this.scans.length - si) + ' scans from bottom');
+                            Helper_1.Helper.log("[emf] Region remove " + (this.scans.length - si) + " scans from bottom");
                             this.scans.splice(si, this.scans.length - si);
                             break;
                         }
                         if (!scan.intersect(this.bounds.left, this.bounds.right)) {
                             // Remove now empty scan
-                            Helper_1.Helper.log('[emf] Region remove now empty scan ' + si + ' due to intersection');
+                            Helper_1.Helper.log("[emf] Region remove now empty scan " + si + " due to intersection");
                             this.scans.splice(si, 1);
                             continue;
                         }
@@ -292,7 +290,7 @@ class Region extends Primitives_1.Obj {
                 this.complexity = 0;
             }
         }
-        Helper_1.Helper.log('[emf] Region intersection -> ' + this.toString());
+        Helper_1.Helper.log("[emf] Region intersection -> " + this.toString());
     }
     offset(offX, offY) {
         if (this.bounds != null) {

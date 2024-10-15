@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { IRendererSettings } from '../emfjs';
+import { IRendererSettings } from "../emfjs";
 export interface EMFConvertResult {
     svg: string;
     returnValue: number;

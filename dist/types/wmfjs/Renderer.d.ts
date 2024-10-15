@@ -1,6 +1,6 @@
-import { Blob } from './Blob';
-import { GDIContext } from './GDIContext';
-import { WMFRecords } from './WMFRecords';
+import { Blob } from "./Blob";
+import { GDIContext } from "./GDIContext";
+import { WMFRecords } from "./WMFRecords";
 export interface IRendererSettings {
     width: string;
     height: string;

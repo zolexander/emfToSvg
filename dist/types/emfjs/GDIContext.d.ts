@@ -1,7 +1,7 @@
-import { SVG } from '../SVG';
-import { PointL, PointS, RectL } from './Primitives';
-import { Region } from './Region';
-import { Brush, ColorRef, Pen } from './Style';
+import { SVG } from "../SVG";
+import { PointL, PointS, RectL } from "./Primitives";
+import { Region } from "./Region";
+import { Brush, ColorRef, Pen } from "./Style";
 export declare class GDIContext {
     private _svg;
     private _svgdefs;

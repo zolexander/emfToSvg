@@ -1,4 +1,4 @@
-import { Blob } from './Blob';
+import { Blob } from "./Blob";
 interface Bitmap {
     getWidth(): number;
     getHeight(): number;

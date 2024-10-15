@@ -1,7 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-var */
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -9,7 +6,7 @@ The MIT License (MIT)
 Copyright (c) 2015 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -18,7 +15,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -37,7 +34,7 @@ class WMFJSError extends Error {
     }
 }
 exports.WMFJSError = WMFJSError;
-var isLoggingEnabled = true;
+let isLoggingEnabled = true;
 function loggingEnabled(enabled) {
     isLoggingEnabled = enabled;
 }
@@ -47,7 +44,7 @@ class Helper {
         (0, emfutils_1.logMessage)(message);
     }
     static _makeUniqueId(prefix) {
-        return 'wmfjs_' + prefix + (this._uniqueId++);
+        return "wmfjs_" + prefix + (this._uniqueId++);
     }
     static _writeUint32Val(uint8arr, pos, val) {
         uint8arr[pos++] = val & 0xff;
@@ -56,7 +53,7 @@ class Helper {
         uint8arr[pos++] = (val >>> 24) & 0xff;
     }
     static _blobToBinary(blob) {
-        let ret = '';
+        let ret = "";
         const len = blob.length;
         for (let i = 0; i < len; i++) {
             ret += String.fromCharCode(blob[i]);

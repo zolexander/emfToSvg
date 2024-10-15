@@ -1,5 +1,4 @@
 "use strict";
-/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -8,7 +7,7 @@ Copyright (c) 2016 Tom Zoehner
 Copyright (c) 2018 Thomas Bluemel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -17,7 +16,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -56,13 +55,13 @@ class ColorRef {
         return (0x1000000 + rgb).toString(16).slice(1);
     }
     toString() {
-        return '{r: ' + this.r + ', g: ' + this.g + ', b: ' + this.b + '}';
+        return "{r: " + this.r + ", g: " + this.g + ", b: " + this.b + "}";
     }
 }
 exports.ColorRef = ColorRef;
 class Font extends Primitives_1.Obj {
     constructor(reader, copy) {
-        super('font');
+        super("font");
         if (reader != null) {
             this.height = reader.readInt32();
             this.width = reader.readInt32();
@@ -117,7 +116,7 @@ class Font extends Primitives_1.Obj {
             this.quality = 0;
             this.pitch = 0;
             this.family = 0;
-            this.facename = 'Helvetica';
+            this.facename = "Helvetica";
         }
     }
     clone() {
@@ -130,7 +129,7 @@ class Font extends Primitives_1.Obj {
 exports.Font = Font;
 class Brush extends Primitives_1.Obj {
     constructor(reader, copy) {
-        super('brush');
+        super("brush");
         if (reader != null) {
             const start = reader.pos;
             this.style = reader.readUint32();
@@ -180,22 +179,22 @@ class Brush extends Primitives_1.Obj {
         return new Brush(null, this);
     }
     toString() {
-        let ret = '{style: ' + this.style;
+        let ret = "{style: " + this.style;
         switch (this.style) {
             case Helper_1.Helper.GDI.BrushStyle.BS_SOLID:
-                ret += ', color: ' + this.color.toString();
+                ret += ", color: " + this.color.toString();
                 break;
             case Helper_1.Helper.GDI.BrushStyle.BS_HATCHED:
-                ret += ', color: ' + this.color.toString() + ', hatchstyle: ' + this.hatchstyle;
+                ret += ", color: " + this.color.toString() + ", hatchstyle: " + this.hatchstyle;
                 break;
         }
-        return ret + '}';
+        return ret + "}";
     }
 }
 exports.Brush = Brush;
 class Pen extends Primitives_1.Obj {
     constructor(reader, style, width, color, brush) {
-        super('pen');
+        super("pen");
         if (reader != null) {
             if (style != null) {
                 // LogPenEx
@@ -208,7 +207,7 @@ class Pen extends Primitives_1.Obj {
             else {
                 // LogPen
                 this.style = reader.readUint32();
-                const pointL = new Primitives_1.PointL(reader);
+                let pointL = new Primitives_1.PointL(reader);
                 this.width = pointL.x;
                 this.color = new ColorRef(reader);
             }
@@ -231,8 +230,8 @@ class Pen extends Primitives_1.Obj {
         return new Pen(null, this.style, this.width, this.color != null ? this.color.clone() : null, this.brush != null ? this.brush.clone() : null);
     }
     toString() {
-        return '{style: ' + this.style + ', width: ' + this.width
-            + ', color: ' + (this.color != null ? this.color.toString() : 'none') + '}';
+        return "{style: " + this.style + ", width: " + this.width
+            + ", color: " + (this.color != null ? this.color.toString() : "none") + "}";
     }
 }
 exports.Pen = Pen;
