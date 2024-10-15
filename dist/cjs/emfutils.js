@@ -25,7 +25,7 @@ class WriteStream extends stream_1.Writable {
 exports.WriteStream = WriteStream;
 async function readFileToBlob(filePath) {
     const fileBuffer = await fs_1.default.promises.readFile(filePath);
-    let arrayBuffer = this._toArrayBuffer(fileBuffer);
+    let arrayBuffer = toArrayBuffer(fileBuffer);
     return arrayBuffer;
 }
 exports.readFileToBlob = readFileToBlob;

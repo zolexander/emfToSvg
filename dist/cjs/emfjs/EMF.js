@@ -74,8 +74,7 @@ class EMFConverter {
             return this._convert(blob);
     }
     async convertEmf(inputFile, settings) {
-        let blob;
-        blob = await (0, emfutils_1.readFileToBlob)(inputFile);
+        let blob = await (0, emfutils_1.readFileToBlob)(inputFile);
         if (settings)
             return this._convert(blob, settings);
         else
