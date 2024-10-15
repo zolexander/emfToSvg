@@ -94,7 +94,7 @@ export class EMFConverter {
         })
     }
 
-    public async convertEMZToFile(inputFile:string,outFile:string,settings: IRendererSettings) {
+    public async convertEMZToFile(inputFile:string,outFile:string,settings?: IRendererSettings) {
         let result =  await this.convertEMZ(inputFile,settings);
         if(result.svg) fs.writeFileSync(outFile,result.svg.toString())
         return result;
