@@ -1,3 +1,8 @@
+/* eslint-disable no-var */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable prettier/prettier */
 import fs from 'fs';
 import { createGunzip } from 'zlib';
 import { Writable } from "stream";
@@ -35,13 +40,13 @@ export async function  extractGzip(str: string) {
         logMessage('Gzip extraction complete!');
         resolve(write.getResult());
         });
-        
+
     });
 }
 export function logMessage(message:any,level?:string) {
-    var logPath = path.join(__dirname, 'logs','app.log');    
+    var logPath = path.join(__dirname, 'logs','app.log');
     if(firstRun) {
-            let directoryPath = path.join(__dirname, 'logs');
+            const directoryPath = path.join(__dirname, 'logs');
             if(!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath);
             }
@@ -53,7 +58,7 @@ export function logMessage(message:any,level?:string) {
             firstRun = false;
         }
         console.log(message);
-        fs.appendFileSync(logPath,message);  
+        fs.appendFileSync(logPath,message);
 }
 export function allowedExtensions(imagetypes:Array<string>,str:string) {
     let result = false;

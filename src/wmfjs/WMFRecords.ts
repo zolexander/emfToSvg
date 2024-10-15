@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /*
 
 The MIT License (MIT)
@@ -24,13 +25,13 @@ SOFTWARE.
 
 */
 
-import { DIBitmap, PatternBitmap16 } from "./Bitmap";
-import { Blob } from "./Blob";
-import { GDIContext } from "./GDIContext";
-import { Helper, WMFJSError } from "./Helper";
-import { PointS, Rect } from "./Primitives";
-import { Region } from "./Region";
-import { Brush, ColorRef, Font, Palette, Pen } from "./Style";
+import { DIBitmap, PatternBitmap16 } from './Bitmap';
+import { Blob } from './Blob';
+import { GDIContext } from './GDIContext';
+import { Helper, WMFJSError } from './Helper';
+import { PointS, Rect } from './Primitives';
+import { Region } from './Region';
+import { Brush, ColorRef, Font, Palette, Pen } from './Style';
 
 export class WMFRecords {
     private _records: ((gdi: GDIContext) => void)[];
@@ -44,7 +45,7 @@ export class WMFRecords {
             reader.seek(curpos);
             const size = reader.readUint32();
             if (size < 3) {
-                throw new WMFJSError("Invalid record size");
+                throw new WMFJSError('Invalid record size');
             }
             const type = reader.readUint16();
             switch (type) {
@@ -263,14 +264,14 @@ export class WMFRecords {
                 case Helper.GDI.RecordType.META_SELECTPALETTE: {
                     const idx = reader.readUint16();
                     this._records.push((gdi) => {
-                        gdi.selectObject(idx, "palette");
+                        gdi.selectObject(idx, 'palette');
                     });
                     break;
                 }
                 case Helper.GDI.RecordType.META_SELECTCLIPREGION: {
                     const idx = reader.readUint16();
                     this._records.push((gdi) => {
-                        gdi.selectObject(idx, "region");
+                        gdi.selectObject(idx, 'region');
                     });
                     break;
                 }
@@ -501,7 +502,7 @@ export class WMFRecords {
                 case Helper.GDI.RecordType.META_BITBLT:
                 case Helper.GDI.RecordType.META_SETDIBTODEV:
                 default: {
-                    let recordName = "UNKNOWN";
+                    let recordName = 'UNKNOWN';
                     for (const name in Helper.GDI.RecordType) {
                         const recordTypes: any = Helper.GDI.RecordType;
                         if (recordTypes[name] === type) {
@@ -509,8 +510,8 @@ export class WMFRecords {
                             break;
                         }
                     }
-                    Helper.log("[WMF] " + recordName + " record (0x" + type.toString(16) + ") at offset 0x"
-                        + curpos.toString(16) + " with " + (size * 2) + " bytes");
+                    Helper.log('[WMF] ' + recordName + ' record (0x' + type.toString(16) + ') at offset 0x'
+                        + curpos.toString(16) + ' with ' + (size * 2) + ' bytes');
                     break;
                 }
             }
@@ -519,7 +520,7 @@ export class WMFRecords {
         }
 
         if (!all) {
-            throw new WMFJSError("Could not read all records");
+            throw new WMFJSError('Could not read all records');
         }
     }
 
