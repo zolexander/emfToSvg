@@ -55,9 +55,11 @@ class Renderer {
         svgElement.firstChild.setAttribute('width', element.getAttribute('width') * info.endScale + 'mm');
         svgElement.firstChild.setAttribute('viewBox', (0, Primitives_1.resizeViewBox)(svgElement.firstChild.getAttribute('viewBox'), info.endScale));
         svgElement.firstChild.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        let path = svgElement.getElementsByTagName('path')[0];
-        let newD = (0, Primitives_1.resizePath)(path.getAttribute('d'), info.endScale);
-        path.setAttribute('d', newD);
+        let paths = svgElement.getElementsByTagName('path');
+        for (const path of paths) {
+            let newD = (0, Primitives_1.resizePath)(path.getAttribute('d'), info.endScale);
+            path.setAttribute('d', newD);
+        }
         let svgString = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" + svgElement.toString().replace(/<svg\s+[^>]*>/, '').replace('</svg>', '');
         return svgString;
     }
