@@ -36,6 +36,12 @@ class ColorRef {
             this.r = reader.readUint8();
             this.g = reader.readUint8();
             this.b = reader.readUint8();
+            if (!this.r)
+                r = 0;
+            if (!this.g)
+                r = 0;
+            if (!this.b)
+                r = 0;
             reader.skip(1);
         }
         else {
@@ -45,6 +51,11 @@ class ColorRef {
                 this.g = g;
             if (b)
                 this.b = b;
+            if (!r || !g || !b) {
+                this.r = 0;
+                this.g = 0;
+                this.b = 0;
+            }
         }
     }
     clone() {
