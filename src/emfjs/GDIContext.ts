@@ -315,9 +315,11 @@ export class GDIContext {
 
     public rectangle(rect: RectL, rw: number, rh: number): void {
         if(!this.state.selected.brush || !this.state.selected.pen) {
-            Helper.log("[gdi] rectangle: rect=" + rect.toString() + " with pen undefined" +
-            + " and brush: undefined");
-            return;
+            if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+            if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+              style: Helper.GDI.BrushStyle.BS_SOLID,
+              color: new ColorRef(null, 0, 0, 0),
+            });
         }
         Helper.log("[gdi] rectangle: rect=" + rect.toString() + " with pen " + this.state.selected.pen.toString()
             + " and brush " + this.state.selected.brush.toString());
@@ -335,11 +337,13 @@ export class GDIContext {
         this._svg.rect(this.state._svggroup, left, top, right - left, bottom - top, rw / 2, rh / 2, opts);
     }
     public roundRect(rect: RectL, rw: number, rh: number): void {
-        if(!this.state.selected.brush || !this.state.selected.pen) {
-            Helper.log("[gdi] rectangle: rect=" + rect.toString() + " with pen undefined" +
-            + " and brush: undefined");
-            return;
-        }
+      if(!this.state.selected.brush || !this.state.selected.pen) {
+        if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+        if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+          style: Helper.GDI.BrushStyle.BS_SOLID,
+          color: new ColorRef(null, 0, 0, 0),
+        });
+    }
         Helper.log("[gdi] rectangle: rect=" + rect.toString() + " with pen " + this.state.selected.pen.toString()
             + " and brush " + this.state.selected.brush.toString());
         const bottom = this._todevY(rect.bottom);
@@ -357,10 +361,13 @@ export class GDIContext {
     }
 
     public lineTo(x: number, y: number): void {
-        if(!this.state.selected.pen) {
-            Helper.log("[gdi] lineTo: x=" + x + " y=" + y + " with pen: undefined ");
-            return;
-        }
+      if(!this.state.selected.brush || !this.state.selected.pen) {
+        if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+        if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+          style: Helper.GDI.BrushStyle.BS_SOLID,
+          color: new ColorRef(null, 0, 0, 0),
+        });
+    }
         Helper.log("[gdi] lineTo: x=" + x + " y=" + y + " with pen " + this.state.selected.pen.toString());
         const toX = this._todevX(x);
         const toY = this._todevY(y);
@@ -393,11 +400,13 @@ export class GDIContext {
     }
 
     public polygon(points: PointS[] | PointL[], bounds: RectL, first: boolean): void {
-        if(!this.state.selected.brush || !this.state.selected.pen) {
-            Helper.log("[gdi] polygon: points=" + points + " with pen: undefined "
-            + " and brush: undefined ");
-            return ;
-        }
+      if(!this.state.selected.brush || !this.state.selected.pen) {
+        if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+        if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+          style: Helper.GDI.BrushStyle.BS_SOLID,
+          color: new ColorRef(null, 0, 0, 0),
+        });
+    }
         Helper.log("[gdi] polygon: points=" + points + " with pen " + this.state.selected.pen.toString()
             + " and brush " + this.state.selected.brush.toString());
         const pts = [];
@@ -416,11 +425,13 @@ export class GDIContext {
     }
 
     public polyPolygon(polygons: PointS[][] | PointL[][], bounds: RectL): void {
-        if(!this.state.selected.brush || !this.state.selected.pen) {
-            Helper.log("[gdi] polyPolygon: polygons.length=" + polygons.length
-                + " with pen: undefined " +  " and brush: undefined ");
-            return;
-        }
+      if(!this.state.selected.brush || !this.state.selected.pen) {
+        if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+        if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+          style: Helper.GDI.BrushStyle.BS_SOLID,
+          color: new ColorRef(null, 0, 0, 0),
+        });
+    }
         Helper.log("[gdi] polyPolygon: polygons.length=" + polygons.length
             + " with pen " + this.state.selected.pen.toString() + " and brush " + this.state.selected.brush.toString());
 
@@ -431,11 +442,13 @@ export class GDIContext {
     }
 
     public polyline(isLineTo: boolean, points: PointS[], bounds: RectL): void {
-        if(!this.state.selected.pen) {
-            Helper.log("[gdi] polyline: isLineTo=" + isLineTo.toString() + ", points=" + points
-            + ", bounds=" + bounds.toString() + " with pen:undefined");
-            return;
-        }
+      if(!this.state.selected.brush || !this.state.selected.pen) {
+        if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+        if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+          style: Helper.GDI.BrushStyle.BS_SOLID,
+          color: new ColorRef(null, 0, 0, 0),
+        });
+    }
         Helper.log("[gdi] polyline: isLineTo=" + isLineTo.toString() + ", points=" + points
             + ", bounds=" + bounds.toString() + " with pen " + this.state.selected.pen.toString());
         const pts: number[][] = [];
@@ -473,11 +486,13 @@ export class GDIContext {
     }
 
     public polybezier(isPolyBezierTo: boolean, points: PointS[], bounds: RectL): void {
-        if(!this.state.selected.pen) {
-            Helper.log("[gdi] polybezier: isPolyBezierTo=" + isPolyBezierTo.toString() + ", points=" + points
-            + ", bounds=" + bounds.toString() + " with pen: undefined ");
-            return;
-        }
+      if(!this.state.selected.brush || !this.state.selected.pen) {
+        if(!this.state.selected.pen) this.state.selected.pen = new Pen(null,null,1,new ColorRef(null,0,0,0));
+        if(!this.state.selected.brush) this.state.selected.brush = new Brush(null, {
+          style: Helper.GDI.BrushStyle.BS_SOLID,
+          color: new ColorRef(null, 0, 0, 0),
+        });
+    }
         Helper.log("[gdi] polybezier: isPolyBezierTo=" + isPolyBezierTo.toString() + ", points=" + points
             + ", bounds=" + bounds.toString() + " with pen " + this.state.selected.pen.toString());
         const pts = [];
