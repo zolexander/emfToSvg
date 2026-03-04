@@ -24,15 +24,22 @@ SOFTWARE.
 
 */
 
-import { HTMLElement } from "node-html-parser";
+import { HTMLElement } from "./utils/node_html_parser_extended";
+
+type Attrs = Record<string, string | number | boolean | null | undefined>;
+type Settings = Attrs | undefined;
+
 export class SVGFilters {
     private _rootElement: HTMLElement;
-    constructor(rootElement: any) {
+
+    constructor(rootElement: HTMLElement) {
         this._rootElement = rootElement;
     }
-    public flood(filter: SVGFilterElement, resultId: string|null, color: string, opacity: number, _settings?: any): void {
-        const floodElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "feFlood");
-        if (resultId && resultId !== null) {
+
+
+    public flood(filter: SVGFilterElement, resultId: string | null, color: string, opacity: number, _settings?: any): void {
+        const floodElement = this._rootElement.createElement<SVGFEFloodElement>("feFlood", "http://www.w3.org/2000/svg");
+        if (resultId) {
             floodElement.setAttribute("id", resultId);
         }
         floodElement.setAttribute("flood-color", color);
@@ -40,20 +47,24 @@ export class SVGFilters {
         filter.appendChild(floodElement);
     }
 
-    public composite(filter: SVGFilterElement,
-                     resultId: string|null,
-                     in1: string|null,
-                     in2: string,
-                     k1?: number,
-                     k2?: number,
-                     k3?: number,
-                     k4?: number,
-                     _settings?: any): void {
-        const compositeElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "feComposite");
-        if (resultId && resultId !== null) {
+    public composite(
+        filter: SVGFilterElement,
+        resultId: string | null,
+        in1: string | null,
+        in2: string,
+        k1?: number,
+        k2?: number,
+        k3?: number,
+        k4?: number,
+        _settings?: any
+    ): void {
+        const compositeElement = this._rootElement.createElement<SVGFECompositeElement>("feComposite", "http://www.w3.org/2000/svg");
+        if (resultId) {
             compositeElement.setAttribute("id", resultId);
         }
-        compositeElement.setAttribute("in", in1);
+        if (in1) {
+            compositeElement.setAttribute("in", in1);
+        }
         compositeElement.setAttribute("in2", in2);
         filter.appendChild(compositeElement);
     }
@@ -62,307 +73,339 @@ export class SVGFilters {
 export class SVGPathBuilder {
     private _path = "";
 
-    public copy(str: string) {
+    public copy(str: string): void {
         this._path = str;
     }
     public move(x: number, y: number): void {
         this._path += ` M ${x} ${y}`;
     }
-    public QBézierCurve(x0:number,y0:number,x1:number,y1:number) {
+    public QBézierCurve(x0: number, y0: number, x1: number, y1: number): void {
         this._path += ` Q ${x0} ${y0} ${x1} ${y1}`;
-
     }
     public path(): string {
         return this._path.substring(1);
     }
-
     public line(pts: number[][]): void {
         pts.forEach((point) => {
             this._path += ` L ${point[0]} ${point[1]}`;
         });
     }
-
-    public movePen(x:number,y:number) {
+    public movePen(x: number, y: number): void {
         this._path += ` L ${x} ${y}`;
     }
-
     public curveC(x1: number, y1: number, x2: number, y2: number, x: number, y: number): void {
         this._path += ` C ${x1} ${y1} ${x2} ${y2} ${x} ${y}`;
     }
-
     public close(): void {
         this._path += ` Z`;
     }
 }
 
 export class SVG {
-    public filters:SVGFilters;
+    public filters: SVGFilters;
     private _svg: SVGElement;
-    private _defs: SVGDefsElement | null;
+    private _defs: SVGDefsElement | null = null;
     private _rootElement: HTMLElement;
-    private id: number = 0;
-    constructor(svg: SVGElement,rootElement: any) {
+    private id = 0;
+
+    constructor(svg: SVGElement, rootElement: HTMLElement) {
         this._svg = svg;
         this._rootElement = rootElement;
         this.filters = new SVGFilters(rootElement);
     }
-    private _appendElement(parent:Element|null,child:any) {
-        if (parent != null) {
+
+
+
+    private _appendElement(parent: Element | null, child: Element): void {
+        if (parent) {
             parent.appendChild(child);
         } else {
             this._svg.appendChild(child);
         }
-
     }
-    public svg(parent: Element|null,
-               x: number,
-               y: number,
-               width: number,
-               height: number,
-               settings?: any
-              ): SVGElement {
-        const svgElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svgElement.setAttribute("x", x.toString());
-        svgElement.setAttribute("y", y.toString());
-        svgElement.setAttribute("width", width.toString());
-        svgElement.setAttribute("height", height.toString());
 
+    private _appendSettings(settings: Settings, element: HTMLElement): void {
+        if (!settings) {
+            return;
+        }
+        for (const [key, value] of Object.entries(settings)) {
+            if (value != null) {
+                element.setAttribute(key, String(value));
+            }
+        }
+    }
 
-        this._appendSettings(settings, svgElement);
+    public svg(
+        parent: Element | null,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        settings?: Settings
+    ): SVGElement {
+        const svgElement = this._rootElement.createElement<SVGSVGElement>("svg", "http://www.w3.org/2000/svg");
+        svgElement.setAttribute("x", String(x));
+        svgElement.setAttribute("y", String(y));
+        svgElement.setAttribute("width", String(width));
+        svgElement.setAttribute("height", String(height));
 
-        this._appendElement(parent,svgElement);
+        this._appendSettings(settings, svgElement as unknown as HTMLElement);
+        this._appendElement(parent, svgElement);
 
         return svgElement;
     }
 
-    public image(parent: Element|null,
-                 x: number,
-                 y: number,
-                 width: number,
-                 height: number,
-                 url: string,
-                 settings?: any): SVGImageElement {
-        const imageElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "image");
-        imageElement.setAttribute("x", x.toString());
-        imageElement.setAttribute("y", y.toString());
-        imageElement.setAttribute("width", width.toString());
-        imageElement.setAttribute("height", height.toString());
+    public image(
+        parent: Element | null,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        url: string,
+        settings?: Settings
+    ): SVGImageElement {
+        const imageElement = this._rootElement.createElement<SVGImageElement>("image", "http://www.w3.org/2000/svg");
+        imageElement.setAttribute("x", String(x));
+        imageElement.setAttribute("y", String(y));
+        imageElement.setAttribute("width", String(width));
+        imageElement.setAttribute("height", String(height));
         imageElement.setAttributeNS("http://www.w3.org/1999/xlink", "href", url);
 
-
-        this._appendSettings(settings, imageElement);
-        parent?.appendChild(imageElement);
-        //this._appendElement(parent,imageElement)
+        this._appendSettings(settings, imageElement as unknown as HTMLElement);
+        this._appendElement(parent, imageElement);
         return imageElement;
     }
 
-    public rect(parent: Element|null,
-                x: number,
-                y: number,
-                width: number,
-                height: number,
-                rx?: number,
-                ry?: number,
-                settings?: any): SVGRectElement;
-    public rect(parent: Element|null, x: number, y: number, width: number, height: number, settings?: any): SVGRectElement;
-    public rect(parent: Element|null,
-                x: number,
-                y: number,
-                width: number,
-                height: number,
-                rx?: number | any,
-                ry?: number,
-                settings?: any): SVGRectElement {
-        const rectElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rectElement.setAttribute("x", x.toString());
-        rectElement.setAttribute("y", y.toString());
-        rectElement.setAttribute("width", width.toString());
-        rectElement.setAttribute("height", height.toString());
-        if (rx !== undefined) {
-            if (rx instanceof Number) {
-                rectElement.setAttribute("rx", rx.toString());
-            } else if (rx instanceof Object) {
-                this._appendSettings(rx, rectElement);
+    public rect(
+        parent: Element | null,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        rx?: number,
+        ry?: number,
+        settings?: Settings
+    ): SVGRectElement;
+    public rect(
+        parent: Element | null,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        settings?: Settings
+    ): SVGRectElement;
+    public rect(
+        parent: Element | null,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        rxOrSettings?: number | Settings,
+        ry?: number,
+        settings?: Settings
+    ): SVGRectElement {
+        const rectElement = this._rootElement.createElement<SVGRectElement>("rect", "http://www.w3.org/2000/svg");
+        rectElement.setAttribute("x", String(x));
+        rectElement.setAttribute("y", String(y));
+        rectElement.setAttribute("width", String(width));
+        rectElement.setAttribute("height", String(height));
+
+        if (typeof rxOrSettings === "number") {
+            rectElement.setAttribute("rx", String(rxOrSettings));
+            if (ry !== undefined) {
+                rectElement.setAttribute("ry", String(ry));
             }
-        }
-        if (ry !== undefined) {
-            rectElement.setAttribute("ry", ry.toString());
+            this._appendSettings(settings, rectElement as unknown as HTMLElement);
+        } else {
+            this._appendSettings(rxOrSettings, rectElement as unknown as HTMLElement);
         }
 
-        this._appendSettings(settings, rectElement);
-        parent?.appendChild(rectElement)
+        this._appendElement(parent, rectElement);
         return rectElement;
     }
 
-    public line(parent: Element|null, x1: number, y1: number, x2: number, y2: number, settings?: any): SVGLineElement {
-        const lineElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "line");
-        lineElement.setAttribute("x1", x1.toString());
-        lineElement.setAttribute("y1", y1.toString());
-        lineElement.setAttribute("x2", x2.toString());
-        lineElement.setAttribute("y2", y2.toString());
+    public line(
+        parent: Element | null,
+        x1: number,
+        y1: number,
+        x2: number,
+        y2: number,
+        settings?: Settings
+    ): SVGLineElement {
+        const lineElement = this._rootElement.createElement<SVGLineElement>("line", "http://www.w3.org/2000/svg");
+        lineElement.setAttribute("x1", String(x1));
+        lineElement.setAttribute("y1", String(y1));
+        lineElement.setAttribute("x2", String(x2));
+        lineElement.setAttribute("y2", String(y2));
 
-
-        this._appendSettings(settings, lineElement);
-        parent?.appendChild(lineElement);
+        this._appendSettings(settings, lineElement as unknown as HTMLElement);
+        this._appendElement(parent, lineElement);
         return lineElement;
     }
 
-    public polygon(parent: Element|null, points: number[][], settings?: any): SVGPolygonElement {
-        const polygonElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        polygonElement.setAttribute("points", points.map((point) => point.join(",")).join(" "));
+    public polygon(
+        parent: Element | null,
+        points: number[][],
+        settings?: Settings
+    ): SVGPolygonElement {
+        const polygonElement = this._rootElement.createElement<SVGPolygonElement>("polygon", "http://www.w3.org/2000/svg");
+        polygonElement.setAttribute(
+            "points",
+            points.map((point) => point.join(",")).join(" ")
+        );
 
-
-        this._appendSettings(settings, polygonElement);
-        parent?.appendChild(polygonElement);
+        this._appendSettings(settings, polygonElement as unknown as HTMLElement);
+        this._appendElement(parent, polygonElement);
         return polygonElement;
     }
 
-    public polyline(parent: Element|null, points: number[][], settings?: any): SVGPolylineElement {
-        const polylineElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        polylineElement.setAttribute("points", points.map((point) => point.join(",")).join(" "));
+    public polyline(
+        parent: Element | null,
+        points: number[][],
+        settings?: Settings
+    ): SVGPolylineElement {
+        const polylineElement = this._rootElement.createElement<SVGPolylineElement>("polyline", "http://www.w3.org/2000/svg");
+        polylineElement.setAttribute(
+            "points",
+            points.map((point) => point.join(",")).join(" ")
+        );
 
-
-        this._appendSettings(settings, polylineElement);
-        parent?.appendChild(polylineElement);
+        this._appendSettings(settings, polylineElement as unknown as HTMLElement);
+        this._appendElement(parent, polylineElement);
         return polylineElement;
     }
 
-    public ellipse(parent: Element|null, cx: number, cy: number, rx: number, ry: number, settings?: any): SVGEllipseElement {
-        const ellipseElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-        ellipseElement.setAttribute("cx", cx.toString());
-        ellipseElement.setAttribute("cy", cy.toString());
-        ellipseElement.setAttribute("rx", rx.toString());
-        ellipseElement.setAttribute("ry", ry.toString());
+    public ellipse(
+        parent: Element | null,
+        cx: number,
+        cy: number,
+        rx: number,
+        ry: number,
+        settings?: Settings
+    ): SVGEllipseElement {
+        const ellipseElement = this._rootElement.createElement<SVGEllipseElement>("ellipse", "http://www.w3.org/2000/svg");
+        ellipseElement.setAttribute("cx", String(cx));
+        ellipseElement.setAttribute("cy", String(cy));
+        ellipseElement.setAttribute("rx", String(rx));
+        ellipseElement.setAttribute("ry", String(ry));
 
-
-        this._appendSettings(settings, ellipseElement);
-        parent?.appendChild(ellipseElement);
+        this._appendSettings(settings, ellipseElement as unknown as HTMLElement);
+        this._appendElement(parent, ellipseElement);
         return ellipseElement;
     }
 
-    public path(parent: SVGElement|null, builder: SVGPathBuilder, settings?: any): SVGPathElement {
-        const pathElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "path");
+    public path(
+        parent: SVGElement | null,
+        builder: SVGPathBuilder,
+        settings?: Settings
+    ): SVGPathElement {
+        const pathElement = this._rootElement.createElement<SVGPathElement>("path", "http://www.w3.org/2000/svg");
         pathElement.setAttribute("d", builder.path());
 
-        this._appendSettings(settings, pathElement);
-        pathElement.setAttribute("id",`path_${this.id}`)
-        this.id +=1;
-        parent?.appendChild(pathElement);
-        return pathElement;
-    }
-    public addPathIfNotExists(parent: SVGElement|null, builder: SVGPathBuilder, settings?: any): SVGPathElement {
-        const pathElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "path");
-        pathElement.setAttribute("d", builder.path());
-        this._appendSettings(settings, pathElement);
-        let isFound = false
-        let pathElements = this._rootElement.getElementsByTagName("path");
-        for(let i= 0; i< pathElements.length;i++) {
-            if(pathElements[i].getAttribute("d") !== builder.path()) {
-                continue;
-            } else {
-                isFound = true;
-                break;
-            }
-        }
-
-        if(isFound) {
-            pathElement.setAttribute("id",`path_${this.id}`)
-            parent?.appendChild(pathElement);
-            this.id +=1;
-        }
+        this._appendSettings(settings, pathElement as unknown as HTMLElement);
+        pathElement.setAttribute("id", `path_${this.id++}`);
+        this._appendElement(parent, pathElement);
         return pathElement;
     }
 
-    public text(parent: Element|null, x: number, y: number, value: string, settings?: any): SVGTextElement {
-        const textElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "text");
-        textElement.setAttribute("x", x.toString());
-        textElement.setAttribute("y", y.toString());
+    public addPathIfNotExists(
+        parent: SVGElement | null,
+        builder: SVGPathBuilder,
+        settings?: Settings
+    ): SVGPathElement {
+        const d = builder.path();
+        let existing: SVGPathElement | null = null;
+        if (parent) {
+            existing = parent.querySelector(`path[d="${d}"]`) as SVGPathElement | null;
+        }
+        if (existing) {
+            return existing;
+        }
+        return this.path(parent, builder, settings);
+    }
 
+    public text(
+        parent: Element | null,
+        x: number,
+        y: number,
+        value: string,
+        settings?: Settings
+    ): SVGTextElement {
+        const textElement = this._rootElement.createElement<SVGTextElement>("text", "http://www.w3.org/2000/svg");
+        textElement.setAttribute("x", String(x));
+        textElement.setAttribute("y", String(y));
+        textElement.textContent = value;
 
-        this._appendSettings(settings, textElement);
-        const textNode = this._rootElement.createTextNode(value);
-        textElement.appendChild(textNode);
-        parent?.appendChild(textElement);
+        this._appendSettings(settings, textElement as unknown as HTMLElement);
+        this._appendElement(parent, textElement);
         return textElement;
     }
 
-    public filter(parent: Element|null,
-                  id: string,
-                  x: number,
-                  y: number,
-                  width: number,
-                  height: number,
-                  settings?: any): SVGFilterElement {
-        const filterElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "filter");
-        filterElement.setAttribute("x", x.toString());
-        filterElement.setAttribute("y", y.toString());
-        filterElement.setAttribute("width", width.toString());
-        filterElement.setAttribute("height", height.toString());
-
-
-        this._appendSettings(settings, filterElement);
-        parent?.appendChild(filterElement);
+    public filter(
+        parent: Element | null,
+        id: string,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        settings?: Settings
+    ): SVGFilterElement {
+        const filterElement = this._rootElement.createElement<SVGFilterElement>("filter", "http://www.w3.org/2000/svg");
+        filterElement.setAttribute("id", id);
+        filterElement.setAttribute("x", String(x));
+        filterElement.setAttribute("y", String(y));
+        filterElement.setAttribute("width", String(width));
+        filterElement.setAttribute("height", String(height));
+        this._appendSettings(settings, filterElement as unknown as HTMLElement);
+        this._appendElement(parent, filterElement);
         return filterElement;
     }
 
-    public pattern(parent: Element|null,
-                   resultId: string,
-                   x: number,
-                   y: number,
-                   width: number,
-                   height: number,
-                   settings?: any): SVGPatternElement {
-        const patternElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "pattern");
-        if (resultId) {
-            patternElement.setAttribute("id", resultId);
-        }
-        patternElement.setAttribute("x", x.toString());
-        patternElement.setAttribute("y", y.toString());
-        patternElement.setAttribute("width", width.toString());
-        patternElement.setAttribute("height", height.toString());
-
-
-        this._appendSettings(settings, patternElement);
-        parent?.appendChild(patternElement);
+    public pattern(
+        parent: Element | null,
+        resultId: string,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        settings?: Settings
+    ): SVGPatternElement {
+        const patternElement = this._rootElement.createElement<SVGPatternElement>("pattern", "http://www.w3.org/2000/svg");
+        patternElement.setAttribute("id", resultId);
+        patternElement.setAttribute("x", String(x));
+        patternElement.setAttribute("y", String(y));
+        patternElement.setAttribute("width", String(width));
+        patternElement.setAttribute("height", String(height));
+        this._appendSettings(settings, patternElement as unknown as HTMLElement);
+        this._appendElement(parent, patternElement);
         return patternElement;
     }
 
-    public defs(): SVGDefsElement|null {
-        if (this._defs === null) {
-            const defsElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "defs");
-
-            this._svg.appendChild(defsElement);
-            this._defs = defsElement;
+    public defs(): SVGDefsElement | null {
+        if (!this._defs) {
+            this._defs = this._rootElement.createElement<SVGDefsElement>("defs", "http://www.w3.org/2000/svg");
+            this._appendElement(null, this._defs);
         }
         return this._defs;
     }
 
-    public clipPath(parent: Element|null, resultId: string, units?: string, settings?: any): SVGClipPathElement {
-        const clipElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-        if (resultId) {
-            clipElement.setAttribute("id", resultId);
+    public clipPath(
+        parent: Element | null,
+        resultId: string,
+        units?: string,
+        settings?: Settings
+    ): SVGClipPathElement {
+        const clipElement = this._rootElement.createElement<SVGClipPathElement>("clipPath", "http://www.w3.org/2000/svg");
+        clipElement.setAttribute("id", resultId);
+        if (units) {
+            clipElement.setAttribute("clipPathUnits", units);
         }
-        if (units === undefined) {
-            units = "userSpaceOnUse";
-        }
-        clipElement.setAttribute("clipPathUnits", units);
-
-
-        this._appendSettings(settings, clipElement);
-        parent?.appendChild(clipElement);
+        this._appendSettings(settings, clipElement as unknown as HTMLElement);
+        this._appendElement(parent, clipElement);
         return clipElement;
     }
 
     public createPath(): SVGPathBuilder {
         return new SVGPathBuilder();
     }
-
-    private _appendSettings(settings: any | undefined, element: Element): void {
-        if (settings !== undefined) {
-            Object.keys(settings).forEach((key) => {
-                element.setAttribute(key, settings[key]);
-            });
-        }
-    }
-
 }

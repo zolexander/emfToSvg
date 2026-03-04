@@ -30,13 +30,22 @@ import { Blob } from "./Blob";
 import { EMFRecords } from "./EMFRecords";
 import { GDIContext } from "./GDIContext";
 import { EMFJSError, Helper } from "./Helper";
-import { HTMLElement, parse, }  from 'node-html-parser';
-import SVGElement from 'node-html-parser';
-import pretty from 'pretty';
+import { HTMLElement, parse } from '../utils/node_html_parser_extended';
+// SVGElement is only used for typing in render(); the extended parser uses the
+// same underlying class so we can still import it from the original module if
+// needed (the alias remains identical at runtime).
 
-
-import fs from 'fs';
 import { resizePath, resizeViewBox } from "./Primitives";
+
+// options object for HTML parser instances shared by both renderers
+const DEFAULT_PARSE_OPTIONS = {
+    lowerCaseTagName: false,
+    comment: true,
+    voidTag: {
+        tags: ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr','p'],
+        closingSlash: true,
+    },
+};
 export interface IRendererSettings {
     width: string;
     height: string;
@@ -54,22 +63,21 @@ export class Renderer {
     public scale: number;
     constructor(blob: ArrayBuffer) {
         this.parse(blob);
+        // root element is an extended node-html-parser element with helpers
+        this._rootElement = this._createRoot();
         Helper.log("EMFJS.Renderer instantiated");
-        this._rootElement = parse("<div></div>",{
-            lowerCaseTagName: false,
-            comment: true ,
-            voidTag:{
-                tags: ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr','p'],	// optional and case insensitive, default value is ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']
-                closingSlash: true
-              },
-        });
+    }
+
+    private _createRoot(): HTMLElement {
+        return parse("<div></div>", DEFAULT_PARSE_OPTIONS);
     }
 
     public render(info: IRendererSettings): string {
-        const svgElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "svg");
+        // keep as any to satisfy SVG constructor which expects a DOM SVGElement
+        const svgElement: any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "svg");
 
         this._render(
-            new SVG(svgElement,this._rootElement),
+            new SVG(svgElement, this._rootElement),
             info.mapMode,
             info.wExt,
             info.hExt,
@@ -77,18 +85,24 @@ export class Renderer {
             info.yExt,
         );
 
-        let element = svgElement.firstChild;
-        svgElement.firstChild.setAttribute('height',element.getAttribute('height')*info.endScale+'mm');
-        svgElement.firstChild.setAttribute('width',element.getAttribute('width')*info.endScale+'mm');
-        svgElement.firstChild.setAttribute('viewBox',resizeViewBox(svgElement.firstChild.getAttribute('viewBox'),info.endScale));
-        svgElement.firstChild.setAttribute('preserveAspectRatio','xMidYMid meet');
-        let paths = svgElement.getElementsByTagName('path');
-        for (const path of paths) {
-          let newD = resizePath(path.getAttribute('d'),info.endScale)
-          path.setAttribute('d',newD);
+        const rootChild = svgElement.firstChild as HTMLElement | null;
+        if (rootChild) {
+            const h = Number(rootChild.getAttribute('height'));
+            const w = Number(rootChild.getAttribute('width'));
+            rootChild.setAttribute('height', (h * info.endScale) + 'mm');
+            rootChild.setAttribute('width', (w * info.endScale) + 'mm');
+            rootChild.setAttribute('viewBox', resizeViewBox(rootChild.getAttribute('viewBox')!, info.endScale));
+            rootChild.setAttribute('preserveAspectRatio', 'xMidYMid meet');
         }
-        let svgString ="<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"+svgElement.toString().replace(/<svg\s+[^>]*>/,'').replace('</svg>','')
-        return svgString;
+
+        const paths = svgElement.getElementsByTagName('path');
+        for (const path of paths) {
+            const newD = resizePath(path.getAttribute('d')!, info.endScale);
+            path.setAttribute('d', newD);
+        }
+
+        const inner = svgElement.toString().replace(/<svg\s+[^>]*>/, '').replace('</svg>', '');
+        return "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" + inner;
     }
 
     private parse(blob: ArrayBuffer) {
@@ -123,6 +137,10 @@ export class Renderer {
 
     }
 }
+
+// re-export parser so external code can work with the extended HTMLElement
+// type without having to import the utils module directly.
+export { parse };
 
 class EMF {
     private _hdrsize: number;

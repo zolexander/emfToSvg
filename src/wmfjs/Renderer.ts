@@ -29,8 +29,16 @@ import { Blob } from "./Blob";
 import { GDIContext } from "./GDIContext";
 import { Helper, WMFJSError } from "./Helper";
 import { WMFRecords } from "./WMFRecords";
-import { HTMLElement, parse, }  from 'node-html-parser';
-import fs from 'fs';
+import { HTMLElement, parse } from '../utils/node_html_parser_extended';
+
+const DEFAULT_PARSE_OPTIONS = {
+    lowerCaseTagName: false,
+    comment: true,
+    voidTag: {
+        tags: ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr', 'p'],
+        closingSlash: true,
+    },
+};
 export interface IRendererSettings {
     width: string;
     height: string;
@@ -45,32 +53,32 @@ export class Renderer {
 
     constructor(blob: ArrayBuffer) {
         this.parse(blob);
-        this._rootElement = parse("<div></div>",{
-            lowerCaseTagName: false,
-            comment: true ,
-            voidTag:{
-                tags: ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr','p'],	// optional and case insensitive, default value is ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']
-                closingSlash: true
-              },
-        });
+        this._rootElement = this._createRoot();
         Helper.log("WMFJS.Renderer instantiated");
     }
 
+    private _createRoot(): HTMLElement {
+        return parse("<div></div>", DEFAULT_PARSE_OPTIONS);
+    }
+
     public render(info: IRendererSettings) {
-        const svgElement:any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "svg");
+        // use any to satisfy SVG constructor expectations
+        const svgElement: any = this._rootElement.createElementNS("http://www.w3.org/2000/svg", "svg");
 
         this._render(
-            new SVG(svgElement,this._rootElement),
+            new SVG(svgElement, this._rootElement),
             info.mapMode,
             info.xExt,
             info.yExt
         );
+
         svgElement.setAttribute("viewBox", [0, 0, Math.abs(info.xExt), Math.abs(info.yExt)].join(" "));
         svgElement.setAttribute("preserveAspectRatio", "none"); // TODO: MM_ISOTROPIC vs MM_ANISOTROPIC
-        svgElement.setAttribute("width", Math.abs(parseFloat(info.width)));
-        svgElement.setAttribute("height", Math.abs(parseFloat(info.height)));
-        let svgString =`<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n ${svgElement.toString().replace(/<svg\s+[^>]*>/,'').replace('</svg>','').replaceAll('-','')}`;
-        return svgString;
+        svgElement.setAttribute("width", Math.abs(parseFloat(info.width)).toString());
+        svgElement.setAttribute("height", Math.abs(parseFloat(info.height)).toString());
+
+        const inner = svgElement.toString().replace(/<svg\s+[^>]*>/, '').replace('</svg>', '').replaceAll('-', '');
+        return `<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n ${inner}`;
     }
 
     private parse(blob: ArrayBuffer) {
@@ -123,6 +131,9 @@ export class Renderer {
         Helper.log("[WMF] <--- DONE RENDERING");
     }
 }
+
+// re-export parse for convenience
+export { parse };
 
 class WMFRect16 {
     private left: number;
