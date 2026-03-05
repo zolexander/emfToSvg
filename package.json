@@ -1,6 +1,6 @@
 {
   "name": "emftosvg",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -52,7 +52,6 @@
   },
   "dependencies": {
     "assert": "^2.1.0",
-    "browserify-fs": "^1.0.1",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
