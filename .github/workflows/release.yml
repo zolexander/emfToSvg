@@ -21,10 +21,14 @@ jobs:
       - name: Install modules
         run: npm ci
       - name: Create package tarball
-        run: npm pack
+        run: |
+          npm pack
+          PACKAGE_FILE="$(ls *.tgz | head -n 1)"
+          cp "$PACKAGE_FILE" emftosvg.tgz
       - name: Create Release and upload tarball
         uses: softprops/action-gh-release@v2
         with:
           files: '*.tgz'
+          overwrite_files: true
           draft: false
           prerelease: false
