@@ -1,13 +1,14 @@
 {
   "name": "emftosvg",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
-  "types": "dist/types/index.d.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "prepare": "husky install",
+    "prepack": "npm run build",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable",
     "build": "npm run build:cjs && npm run build:esm && npm run build:umd && npm run build:types",
@@ -40,15 +41,15 @@
     "esm",
     "umd"
   ],
-  "author": "Tom Chen <tomchen.org@gmail.com>",
+  "author": "Zoltan Jancso <zoltanjancso1@proton.me>",
   "license": "MIT",
-  "homepage": "https://github.com/tomchen/example-typescript-package",
+  "homepage": "https://github.com/jzolme/emfToSvg.git",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tomchen/example-typescript-package.git"
+    "url": "git@github.com:jzolme/emfToSvg.git"
   },
   "bugs": {
-    "url": "https://github.com/tomchen/example-typescript-package/issues"
+    "url": "https://github.com/jzolme/emfToSvg/issues"
   },
   "dependencies": {
     "assert": "^2.1.0",
